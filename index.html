@@ -48,7 +48,7 @@
 		--font-body:    'DM Sans', sans-serif;
 
 		--sheet-peek: 116px;
-		--sheet-mid:  46vh;
+		--sheet-mid:  52vh;
 		--sheet-full: 72vh;
 
 		--transition: cubic-bezier(0.32, 0.72, 0, 1);
@@ -277,10 +277,35 @@
 	  }
 
 	  #sheet-content {
-		padding: 0 16px 16px;
-		overflow-y: auto;
-		overscroll-behavior: contain;
-	  }
+		  padding: 0 16px 16px;
+		  overflow-y: auto;
+		  overscroll-behavior: contain;
+		  position: relative;
+		}
+
+		#sheet-close {
+		  position: absolute;
+		  top: 2px;
+		  right: 14px;
+		  width: 30px;
+		  height: 30px;
+		  border: none;
+		  border-radius: 50%;
+		  background: var(--panel-3);
+		  color: var(--brand-dark);
+		  font-size: 20px;
+		  line-height: 1;
+		  cursor: pointer;
+		  display: flex;
+		  align-items: center;
+		  justify-content: center;
+		  z-index: 5;
+		  box-shadow: var(--shadow-sm);
+		}
+
+		#sheet-close:hover {
+		  background: #d6e7f7;
+		}
 
 	  #place-header {
 		display: none;
@@ -639,11 +664,12 @@
     <div id="sheet-handle-area" aria-hidden="true">
       <div class="handle-pill"></div>
     </div>
-
-    <div id="sheet-content">
-      <span class="sheet-top-label" style="display:none" id="desktop-label">Visor de Sombras</span>
-
-      <div id="place-header">
+	
+	<div id="sheet-content">
+	  <button id="sheet-close" aria-label="Cerrar panel">×</button>
+	  <span class="sheet-top-label" style="display:none" id="desktop-label">Visor de Sombras</span>
+    
+		<div id="place-header">
         <div id="place-name" class="empty">Selecciona una terraza</div>
       </div>
 
@@ -753,7 +779,7 @@
     const ringLabelText = document.getElementById('ring-label-text');
     const noResult = document.getElementById('no-result');
     const desktopLabel = document.getElementById('desktop-label');
-    const handleArea = document.getElementById('sheet-handle-area');
+    const sheetClose = document.getElementById('sheet-close');
 
     const map = L.map('map', {
       center: [40.4168, -3.7038],
@@ -775,7 +801,7 @@
 
     map.fitBounds(MADRID_BOUNDS, { padding: [20, 20], maxZoom: 11 });
 
-    L.control.zoom({ position: 'topright' }).addTo(map);
+	//L.control.zoom({ position: 'topright' }).addTo(map);
 
     proj4.defs(
       SOURCE_EPSG,
@@ -846,6 +872,9 @@
     handleArea.addEventListener('mousedown', e => onDragStart(e.clientY));
     document.addEventListener('mousemove', e => { if (isDragging) onDragMove(e.clientY); });
     document.addEventListener('mouseup', () => { if (isDragging) onDragEnd(); });
+	sheetClose.addEventListener('click', () => {
+	  setSheetState('peek');
+	});
 
     let statusTimeout = null;
 
@@ -1285,6 +1314,8 @@
       searchInput.value = selectedRotulo;
       searchClear.classList.add('visible');
       closeAC();
+	  searchInput.blur();
+	  document.activeElement?.blur();
 
       placeName.textContent = selectedRotulo;
       placeName.classList.remove('empty');
