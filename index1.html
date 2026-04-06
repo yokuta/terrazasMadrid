@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ProtoVisor · Sombras de terrazas</title>
+
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <style>
+    :root {
+      --border: #d9d9d9;
+      --bg: #f6f7f9;
+      --panel: #ffffff;
+      --text: #222;
+      --muted: #666;
+      --accent: #0b57d0;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      font-family: Arial, sans-serif;
+      color: var(--text);
+      background: var(--bg);
+    }
+
+    #app {
+      display: grid;
+      grid-template-columns: 360px 1fr;
+      height: 100%;
+    }
+
+    #sidebar {
+      background: var(--panel);
+      border-right: 1px solid var(--border);
+      padding: 16px;
+      overflow: auto;
+    }
+
+    #map {
+      width: 100%;
+      height: 100%;
+    }
+
+    h1 {
+      margin: 0 0 8px;
+      font-size: 20px;
+    }
+
+    .small {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.4;
+    }
+
+    .block {
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
+    }
+
+    .field {
+      margin-bottom: 12px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    input, select, button {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 14px;
+      background: #fff;
+    }
+
+    button {
+      cursor: pointer;
+      font-weight: 700;
+    }
+
+    .button-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .primary {
+      background: var(--accent);
+      color: #fff;
+      border-color: var(--accent);
+    }
+
+    .inline {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .range-value {
+      min-width: 48px;
+      text-align: center;
+      font-weight: 700;
+    }
+
+    #status, #summary {
+      margin-top: 12px;
+      font-size: 13px;
+      line-height: 1.5;
+      white-space: pre-line;
+    }
+
+    #summary {
+      background: #fafafa;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 12px;
+    }
+
+    .legend {
+      margin-top: 10px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    code {
+      background: #f0f0f0;
+      padding: 2px 5px;
+      border-radius: 4px;
+    }
+
+    @media (max-width: 900px) {
+      #app {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto 1fr;
+      }
+      #sidebar {
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <aside id="sidebar">
+      <h1>Sombras de terrazas · protovisor</h1>
+      <div class="small">
+        Fase 1: carga una semana desde Cloudflare R2, filtra una terraza concreta y anima sus polígonos de sombra por hora.
+      </div>
+
+      <div class="block">
+        <div class="field">
+          <label for="weekSelect">Semana</label>
+          <select id="weekSelect"></select>
+        </div>
+
+        <div class="field">
+          <label for="terraceIdInput">terraza_id</label>
+          <input id="terraceIdInput" type="number" value="5" />
+        </div>
+
+        <div class="field">
+          <label for="rotuloInput">rotulo (opcional)</label>
+          <input id="rotuloInput" type="text" placeholder="Ej.: Terraza Plaza X" />
+        </div>
+
+        <div class="button-row">
+          <button id="loadBtn" class="primary">Cargar datos</button>
+          <button id="fitBtn">Ajustar mapa</button>
+        </div>
+
+        <div id="status" class="small">Listo.</div>
+      </div>
+
+      <div class="block">
+        <label for="hourSlider">Hora</label>
+        <div class="inline">
+          <input id="hourSlider" type="range" min="0" max="23" step="1" value="6" />
+          <div id="hourValue" class="range-value">06:00</div>
+        </div>
+
+        <div class="button-row">
+          <button id="playBtn" class="primary">Play</button>
+          <button id="stopBtn">Stop</button>
+        </div>
+
+        <div class="legend">
+          El visor muestra solo las geometrías de la hora seleccionada.
+        </div>
+      </div>
+
+      <div class="block">
+        <div id="summary">Sin datos cargados.</div>
+        <div class="small" style="margin-top:10px;">
+          URL base actual del bucket:
+          <br /><code id="bucketBaseLabel"></code>
+        </div>
+      </div>
+    </aside>
+
+    <main id="map"></main>
+  </div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/proj4js/2.9.2/proj4.js"></script>
+
+  <script type="module">
+    import { asyncBufferFromUrl, parquetReadObjects } from 'https://cdn.jsdelivr.net/npm/hyparquet@1.17.8/src/hyparquet.min.js';
+
+    // =========================
+    // CONFIG
+    // =========================
+    const BUCKET_BASE_URL = 'https://5a58dea4d021e5c8c12f0d6b08b1eceb.r2.cloudflarestorage.com/terrazasmadrid';
+    const FILE_PREFIX = 'terrace_shadows_2025_';
+    const FILE_SUFFIX = '_con_rotulo.parquet';
+    const SOURCE_EPSG = 'EPSG:25830';
+    const TARGET_EPSG = 'EPSG:4326';
+    const DEFAULT_WEEK = 1;
+    const DEFAULT_TERRACE_ID = 5;
+    const HOUR_MIN = 6;
+    const HOUR_MAX = 22;
+
+    // Proyección ETRS89 / UTM zone 30N
+    proj4.defs(
+      SOURCE_EPSG,
+      '+proj=utm +zone=30 +ellps=GRS80 +units=m +no_defs +type=crs'
+    );
+    proj4.defs(
+      TARGET_EPSG,
+      '+proj=longlat +datum=WGS84 +no_defs +type=crs'
+    );
+
+    // =========================
+    // DOM
+    // =========================
+    const weekSelect = document.getElementById('weekSelect');
+    const terraceIdInput = document.getElementById('terraceIdInput');
+    const rotuloInput = document.getElementById('rotuloInput');
+    const loadBtn = document.getElementById('loadBtn');
+    const fitBtn = document.getElementById('fitBtn');
+    const hourSlider = document.getElementById('hourSlider');
+    const hourValue = document.getElementById('hourValue');
+    const playBtn = document.getElementById('playBtn');
+    const stopBtn = document.getElementById('stopBtn');
+    const statusBox = document.getElementById('status');
+    const summaryBox = document.getElementById('summary');
+    const bucketBaseLabel = document.getElementById('bucketBaseLabel');
+
+    bucketBaseLabel.textContent = BUCKET_BASE_URL;
+
+    // =========================
+    // MAP
+    // =========================
+    const map = L.map('map', {
+      center: [40.4168, -3.7038],
+      zoom: 13,
+      preferCanvas: true,
+    });
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 20,
+      attribution: '&copy; OpenStreetMap contributors',
+    }).addTo(map);
+
+    let currentLayer = null;
+    let terraceOutlineLayer = null;
+    let currentFilteredFeatures = [];
+    let playTimer = null;
+
+    // =========================
+    // INIT UI
+    // =========================
+    for (let w = 1; w <= 52; w += 1) {
+      const option = document.createElement('option');
+      option.value = String(w);
+      option.textContent = `Semana ${String(w).padStart(2, '0')}`;
+      if (w === DEFAULT_WEEK) option.selected = true;
+      weekSelect.appendChild(option);
+    }
+
+    hourSlider.min = String(HOUR_MIN);
+    hourSlider.max = String(HOUR_MAX);
+    hourSlider.value = String(HOUR_MIN);
+    terraceIdInput.value = String(DEFAULT_TERRACE_ID);
+    updateHourLabel(Number(hourSlider.value));
+
+    // =========================
+    // HELPERS
+    // =========================
+    function setStatus(message, isError = false) {
+      statusBox.textContent = message;
+      statusBox.style.color = isError ? '#b42318' : '#666';
+    }
+
+    function updateHourLabel(hour) {
+      hourValue.textContent = `${String(hour).padStart(2, '0')}:00`;
+    }
+
+    function buildWeekFileName(week) {
+      return `${FILE_PREFIX}W${String(week).padStart(2, '0')}${FILE_SUFFIX}`;
+    }
+
+    function buildWeekUrl(week) {
+      return `${BUCKET_BASE_URL}/${buildWeekFileName(week)}`;
+    }
+
+    function transformCoords25830To4326(coords) {
+      if (!Array.isArray(coords)) return coords;
+      if (typeof coords[0] === 'number' && typeof coords[1] === 'number') {
+        const [x, y] = coords;
+        const [lon, lat] = proj4(SOURCE_EPSG, TARGET_EPSG, [x, y]);
+        return [lon, lat];
+      }
+      return coords.map(transformCoords25830To4326);
+    }
+
+    function reprojectGeometry(geometry) {
+      if (!geometry || !geometry.coordinates) return geometry;
+      return {
+        ...geometry,
+        coordinates: transformCoords25830To4326(geometry.coordinates),
+      };
+    }
+
+    function toLeafletFeature(row) {
+      return {
+        type: 'Feature',
+        geometry: reprojectGeometry(row.geometry),
+        properties: {
+          terraza_id: row.terraza_id,
+          rotulo: row.rotulo,
+          datetime: row.datetime,
+          date: row.date,
+          hour: Number(row.hour),
+          shadow_area_m2: row.shadow_area_m2,
+          shadow_pct: row.shadow_pct,
+          terrace_area_m2: row.terrace_area_m2,
+          building_id: row.building_id,
+        },
+      };
+    }
+
+    function clearLayers() {
+      if (currentLayer) {
+        map.removeLayer(currentLayer);
+        currentLayer = null;
+      }
+      if (terraceOutlineLayer) {
+        map.removeLayer(terraceOutlineLayer);
+        terraceOutlineLayer = null;
+      }
+    }
+
+    function renderHour(hour) {
+      if (!currentFilteredFeatures.length) {
+        clearLayers();
+        summaryBox.textContent = 'No hay datos para renderizar.';
+        return;
+      }
+
+      const hourFeatures = currentFilteredFeatures.filter(
+        (f) => Number(f.properties.hour) === Number(hour)
+      );
+
+      if (currentLayer) map.removeLayer(currentLayer);
+      if (terraceOutlineLayer) map.removeLayer(terraceOutlineLayer);
+
+      currentLayer = L.geoJSON(hourFeatures, {
+        style: () => ({
+          color: '#1d4ed8',
+          weight: 2,
+          fillColor: '#60a5fa',
+          fillOpacity: 0.35,
+        }),
+        onEachFeature: (feature, layer) => {
+          const p = feature.properties;
+          layer.bindPopup(`
+            <strong>Terraza ${p.terraza_id}</strong><br>
+            ${p.rotulo || '-'}<br>
+            Fecha: ${p.date || '-'}<br>
+            Hora: ${String(p.hour).padStart(2, '0')}:00<br>
+            Sombra: ${formatNumber(p.shadow_area_m2)} m²<br>
+            % sombra: ${formatNumber(p.shadow_pct)} %<br>
+            Área terraza: ${formatNumber(p.terrace_area_m2)} m²
+          `);
+        },
+      }).addTo(map);
+
+      if (hourFeatures.length) {
+        const bounds = currentLayer.getBounds();
+        if (bounds.isValid()) {
+          terraceOutlineLayer = L.rectangle(bounds, {
+            color: '#111827',
+            weight: 1,
+            fill: false,
+            dashArray: '4 4',
+          }).addTo(map);
+        }
+      }
+
+      const terraceIds = [...new Set(currentFilteredFeatures.map(f => f.properties.terraza_id))];
+      const rotulos = [...new Set(currentFilteredFeatures.map(f => f.properties.rotulo).filter(Boolean))];
+      const dates = [...new Set(currentFilteredFeatures.map(f => f.properties.date).filter(Boolean))].sort();
+      const shownCount = hourFeatures.length;
+
+      const sample = hourFeatures[0]?.properties;
+      summaryBox.textContent = [
+        `Semana: ${String(weekSelect.value).padStart(2, '0')}`,
+        `Terraza(s): ${terraceIds.join(', ') || '-'}`,
+        `Rótulo(s): ${rotulos.join(' | ') || '-'}`,
+        `Hora actual: ${String(hour).padStart(2, '0')}:00`,
+        `Geometrías visibles: ${shownCount}`,
+        `Fechas en la selección: ${dates.length}`,
+        `Área terraza: ${sample ? formatNumber(sample.terrace_area_m2) : '-'} m²`,
+      ].join('\n');
+    }
+
+    function formatNumber(value) {
+      if (value === null || value === undefined || Number.isNaN(Number(value))) return '-';
+      return Number(value).toLocaleString('es-ES', {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 2,
+      });
+    }
+
+    async function loadWeekData() {
+      stopAnimation();
+      clearLayers();
+      currentFilteredFeatures = [];
+
+      const week = Number(weekSelect.value);
+      const terraceId = Number(terraceIdInput.value);
+      const rotulo = rotuloInput.value.trim().toLowerCase();
+      const url = buildWeekUrl(week);
+
+      setStatus(`Cargando ${buildWeekFileName(week)}...`);
+
+      try {
+        const file = await asyncBufferFromUrl({ url });
+        const rows = await parquetReadObjects({
+          file,
+          columns: [
+            'terraza_id',
+            'rotulo',
+            'datetime',
+            'date',
+            'hour',
+            'shadow_area_m2',
+            'shadow_pct',
+            'terrace_area_m2',
+            'building_id',
+            'geometry',
+          ],
+        });
+
+        const filteredRows = rows.filter((row) => {
+          const matchesTerrace = Number(row.terraza_id) === terraceId;
+          const matchesRotulo = !rotulo || String(row.rotulo || '').toLowerCase().includes(rotulo);
+          return matchesTerrace && matchesRotulo;
+        });
+
+        if (!filteredRows.length) {
+          summaryBox.textContent = 'No se encontraron filas con esos filtros.';
+          setStatus('Carga completada, pero no hubo coincidencias.', true);
+          return;
+        }
+
+        currentFilteredFeatures = filteredRows
+          .filter((row) => row.geometry)
+          .map(toLeafletFeature)
+          .sort((a, b) => Number(a.properties.hour) - Number(b.properties.hour));
+
+        updateHourLabel(Number(hourSlider.value));
+        renderHour(Number(hourSlider.value));
+
+        if (currentLayer) {
+          const bounds = currentLayer.getBounds();
+          if (bounds.isValid()) map.fitBounds(bounds.pad(0.2));
+        }
+
+        setStatus(
+          `Carga completada. ${filteredRows.length} registros filtrados para terraza_id=${terraceId}.`
+        );
+      } catch (error) {
+        console.error(error);
+        setStatus(
+          'Error cargando el parquet. Revisa que la URL exacta del archivo exista y que R2 permita CORS desde GitHub Pages.',
+          true
+        );
+        summaryBox.textContent = [
+          'Error de carga.',
+          '',
+          `URL intentada: ${url}`,
+          '',
+          'Comprueba:',
+          '1) que el objeto exista con ese nombre exacto',
+          '2) que sea público',
+          '3) que tenga cabeceras CORS válidas',
+        ].join('\n');
+      }
+    }
+
+    function fitToData() {
+      if (!currentLayer) return;
+      const bounds = currentLayer.getBounds();
+      if (bounds.isValid()) map.fitBounds(bounds.pad(0.2));
+    }
+
+    function startAnimation() {
+      if (!currentFilteredFeatures.length || playTimer) return;
+      playTimer = window.setInterval(() => {
+        let nextHour = Number(hourSlider.value) + 1;
+        if (nextHour > HOUR_MAX) nextHour = HOUR_MIN;
+        hourSlider.value = String(nextHour);
+        updateHourLabel(nextHour);
+        renderHour(nextHour);
+      }, 900);
+    }
+
+    function stopAnimation() {
+      if (playTimer) {
+        window.clearInterval(playTimer);
+        playTimer = null;
+      }
+    }
+
+    // =========================
+    // EVENTS
+    // =========================
+    hourSlider.addEventListener('input', () => {
+      const hour = Number(hourSlider.value);
+      updateHourLabel(hour);
+      renderHour(hour);
+    });
+
+    loadBtn.addEventListener('click', loadWeekData);
+    fitBtn.addEventListener('click', fitToData);
+    playBtn.addEventListener('click', startAnimation);
+    stopBtn.addEventListener('click', stopAnimation);
+
+    // Autocarga inicial
+    loadWeekData();
+  </script>
+</body>
+</html>

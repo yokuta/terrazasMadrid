@@ -3,39 +3,46 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ProtoVisor · Sombras de terrazas</title>
+  <title>Visor de sombras por terraza · DuckDB-Wasm</title>
 
+  <link rel="icon" href="data:,">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
   <style>
     :root {
-      --border: #d9d9d9;
-      --bg: #f6f7f9;
+      --bg: #f3f5f9;
       --panel: #ffffff;
-      --text: #222;
-      --muted: #666;
+      --panel-2: #f8fafc;
+      --border: #d8dee8;
+      --text: #17202a;
+      --muted: #5f6b7a;
       --accent: #0b57d0;
+      --shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+      --error: #b42318;
     }
+
+    * { box-sizing: border-box; }
 
     html, body {
       margin: 0;
       padding: 0;
       height: 100%;
       font-family: Arial, sans-serif;
-      color: var(--text);
       background: var(--bg);
+      color: var(--text);
     }
 
     #app {
       display: grid;
-      grid-template-columns: 360px 1fr;
+      grid-template-columns: 380px 1fr;
       height: 100%;
     }
 
     #sidebar {
-      background: var(--panel);
-      border-right: 1px solid var(--border);
-      padding: 16px;
       overflow: auto;
+      padding: 18px;
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+      border-right: 1px solid var(--border);
     }
 
     #map {
@@ -43,25 +50,23 @@
       height: 100%;
     }
 
-    h1 {
-      margin: 0 0 8px;
-      font-size: 20px;
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 16px;
+      box-shadow: var(--shadow);
+      margin-bottom: 14px;
     }
 
-    .small {
-      color: var(--muted);
-      font-size: 13px;
-      line-height: 1.4;
-    }
-
-    .block {
-      margin-top: 16px;
-      padding-top: 16px;
-      border-top: 1px solid var(--border);
+    .card h2 {
+      margin: 0 0 12px;
+      font-size: 15px;
     }
 
     .field {
       margin-bottom: 12px;
+      position: relative;
     }
 
     label {
@@ -71,78 +76,151 @@
       font-weight: 700;
     }
 
-    input, select, button {
+    input {
       width: 100%;
-      box-sizing: border-box;
-      padding: 10px 12px;
       border: 1px solid var(--border);
-      border-radius: 8px;
+      border-radius: 12px;
+      padding: 11px 12px;
       font-size: 14px;
-      background: #fff;
+      background: white;
+      color: var(--text);
     }
 
-    button {
-      cursor: pointer;
-      font-weight: 700;
-    }
-
-    .button-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px;
-      margin-top: 8px;
-    }
-
-    .primary {
-      background: var(--accent);
-      color: #fff;
+    input:focus {
+      outline: 2px solid rgba(11, 87, 208, 0.15);
       border-color: var(--accent);
     }
 
     .inline {
       display: grid;
       grid-template-columns: 1fr auto;
-      gap: 8px;
+      gap: 10px;
       align-items: center;
     }
 
     .range-value {
-      min-width: 48px;
+      min-width: 64px;
       text-align: center;
       font-weight: 700;
+      padding: 10px 8px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: var(--panel-2);
     }
 
-    #status, #summary {
-      margin-top: 12px;
+    #status {
+      margin-top: 10px;
+      padding: 10px 12px;
+      border-radius: 12px;
+      background: #f6f8fb;
+      border: 1px solid var(--border);
       font-size: 13px;
-      line-height: 1.5;
+      line-height: 1.45;
+      color: var(--muted);
       white-space: pre-line;
     }
 
-    #summary {
-      background: #fafafa;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 10px 12px;
+    .summary-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 12px;
     }
 
-    .legend {
-      margin-top: 10px;
+    .metric {
+      background: var(--panel-2);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 12px;
+    }
+
+    .metric .label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    .metric .value {
+      font-size: 18px;
+      font-weight: 700;
+      line-height: 1.2;
+    }
+
+    .detail-list {
+      display: grid;
+      gap: 8px;
+    }
+
+    .detail-item {
+      padding: 10px 12px;
+      border-radius: 12px;
+      background: var(--panel-2);
+      border: 1px solid var(--border);
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .muted-help {
+      margin-top: 6px;
       font-size: 12px;
       color: var(--muted);
     }
 
-    code {
-      background: #f0f0f0;
-      padding: 2px 5px;
-      border-radius: 4px;
+    .autocomplete-list {
+      position: absolute;
+      z-index: 2000;
+      top: calc(100% + 6px);
+      left: 0;
+      right: 0;
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      box-shadow: var(--shadow);
+      max-height: 260px;
+      overflow: auto;
+      display: none;
     }
 
-    @media (max-width: 900px) {
+    .autocomplete-item {
+      padding: 10px 12px;
+      border-bottom: 1px solid #eef2f7;
+      cursor: pointer;
+    }
+
+    .autocomplete-item:last-child {
+      border-bottom: none;
+    }
+
+    .autocomplete-item:hover,
+    .autocomplete-item.active {
+      background: #f3f7ff;
+    }
+
+    .autocomplete-title {
+      font-size: 14px;
+      color: var(--text);
+      line-height: 1.35;
+    }
+
+    .autocomplete-subtitle {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 2px;
+      line-height: 1.35;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    @media (max-width: 980px) {
       #app {
         grid-template-columns: 1fr;
         grid-template-rows: auto 1fr;
       }
+
       #sidebar {
         border-right: none;
         border-bottom: 1px solid var(--border);
@@ -153,57 +231,66 @@
 <body>
   <div id="app">
     <aside id="sidebar">
-      <h1>Sombras de terrazas · protovisor</h1>
-      <div class="small">
-        Fase 1: carga una semana desde Cloudflare R2, filtra una terraza concreta y anima sus polígonos de sombra por hora.
-      </div>
-
-      <div class="block">
-        <div class="field">
-          <label for="weekSelect">Semana</label>
-          <select id="weekSelect"></select>
-        </div>
+      <div class="card">
+        <h2>Búsqueda</h2>
 
         <div class="field">
-          <label for="terraceIdInput">terraza_id</label>
-          <input id="terraceIdInput" type="number" value="5" />
+          <label for="rotuloSearchInput">Buscar por rótulo</label>
+          <input
+            id="rotuloSearchInput"
+            type="text"
+            placeholder="Escribe un nombre, por ejemplo: anun"
+            autocomplete="off"
+          />
+          <div id="autocompleteList" class="autocomplete-list"></div>
+          <div class="muted-help">Puedes escribir parte del nombre y elegir una sugerencia.</div>
         </div>
 
         <div class="field">
-          <label for="rotuloInput">rotulo (opcional)</label>
-          <input id="rotuloInput" type="text" placeholder="Ej.: Terraza Plaza X" />
+          <label for="terraceIdInput">ID de terraza</label>
+          <input id="terraceIdInput" type="number" min="1" step="1" value="318" placeholder="Ej. 318" />
         </div>
 
-        <div class="button-row">
-          <button id="loadBtn" class="primary">Cargar datos</button>
-          <button id="fitBtn">Ajustar mapa</button>
+        <div class="field">
+          <label for="dateInput">Fecha</label>
+          <input id="dateInput" type="date" value="2026-01-01" min="2026-01-01" max="2026-12-31" />
         </div>
 
-        <div id="status" class="small">Listo.</div>
+        <div class="field">
+          <label for="hourSlider">Hora</label>
+          <div class="inline">
+            <input id="hourSlider" type="range" min="6" max="22" step="1" value="12" />
+            <div id="hourValue" class="range-value">12:00</div>
+          </div>
+        </div>
+
+        <div id="status">Inicializando...</div>
       </div>
 
-      <div class="block">
-        <label for="hourSlider">Hora</label>
-        <div class="inline">
-          <input id="hourSlider" type="range" min="0" max="23" step="1" value="6" />
-          <div id="hourValue" class="range-value">06:00</div>
+      <div class="card">
+        <h2>Resumen</h2>
+
+        <div class="summary-grid">
+          <div class="metric">
+            <div class="label">Sombra</div>
+            <div id="metricShadowPct" class="value">—</div>
+          </div>
+          <div class="metric">
+            <div class="label">Área sombra</div>
+            <div id="metricShadowArea" class="value">—</div>
+          </div>
+          <div class="metric">
+            <div class="label">Área terraza</div>
+            <div id="metricTerraceArea" class="value">—</div>
+          </div>
+          <div class="metric">
+            <div class="label">Semana ISO</div>
+            <div id="metricWeek" class="value">—</div>
+          </div>
         </div>
 
-        <div class="button-row">
-          <button id="playBtn" class="primary">Play</button>
-          <button id="stopBtn">Stop</button>
-        </div>
-
-        <div class="legend">
-          El visor muestra solo las geometrías de la hora seleccionada.
-        </div>
-      </div>
-
-      <div class="block">
-        <div id="summary">Sin datos cargados.</div>
-        <div class="small" style="margin-top:10px;">
-          URL base actual del bucket:
-          <br /><code id="bucketBaseLabel"></code>
+        <div id="summaryDetails" class="detail-list">
+          <div class="detail-item">Rótulo: —</div>
         </div>
       </div>
     </aside>
@@ -215,22 +302,62 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/proj4js/2.9.2/proj4.js"></script>
 
   <script type="module">
-    import { asyncBufferFromUrl, parquetReadObjects } from 'https://cdn.jsdelivr.net/npm/hyparquet@1.17.8/src/hyparquet.min.js';
+    import * as duckdb from 'https://cdn.jsdelivr.net/npm/@duckdb/duckdb-wasm@1.33.1-dev20.0/+esm';
+    import wkx from 'https://esm.sh/wkx';
+    import { Buffer } from 'https://esm.sh/buffer';
 
-    // =========================
-    // CONFIG
-    // =========================
-    const BUCKET_BASE_URL = 'https://5a58dea4d021e5c8c12f0d6b08b1eceb.r2.cloudflarestorage.com/terrazasmadrid';
-    const FILE_PREFIX = 'terrace_shadows_2025_';
-    const FILE_SUFFIX = '_con_rotulo.parquet';
+    const BUCKET_BASE_URL = 'https://pub-048f4919d8bc472898a82c1bca238348.r2.dev/weekly_parquet';
+    const FILE_YEAR_IN_BUCKET = 2025;
+    const FILE_BASENAME = 'terrace_shadows';
+    const FILE_SUFFIX = '.parquet';
+
+    const ROTULOS_JSON_URL = './rotulos_terrazas_index.json';
+
+    const MIN_DATE = '2026-01-01';
+    const MAX_DATE = '2026-12-31';
+
     const SOURCE_EPSG = 'EPSG:25830';
     const TARGET_EPSG = 'EPSG:4326';
-    const DEFAULT_WEEK = 1;
-    const DEFAULT_TERRACE_ID = 5;
-    const HOUR_MIN = 6;
-    const HOUR_MAX = 22;
 
-    // Proyección ETRS89 / UTM zone 30N
+    let db = null;
+    let conn = null;
+    let currentLayer = null;
+    let currentDayFeatures = [];
+    let currentRecord = null;
+    let autoLoadTimeout = null;
+
+    let rotulosCatalog = [];
+    let selectedSuggestionIndex = -1;
+    let currentSuggestions = [];
+
+    const registeredWeekAliases = new Set();
+
+    const rotuloSearchInput = document.getElementById('rotuloSearchInput');
+    const autocompleteList = document.getElementById('autocompleteList');
+    const terraceIdInput = document.getElementById('terraceIdInput');
+    const dateInput = document.getElementById('dateInput');
+    const hourSlider = document.getElementById('hourSlider');
+    const hourValue = document.getElementById('hourValue');
+
+    const statusBox = document.getElementById('status');
+    const metricShadowPct = document.getElementById('metricShadowPct');
+    const metricShadowArea = document.getElementById('metricShadowArea');
+    const metricTerraceArea = document.getElementById('metricTerraceArea');
+    const metricWeek = document.getElementById('metricWeek');
+    const summaryDetails = document.getElementById('summaryDetails');
+
+    const map = L.map('map', {
+      center: [40.4168, -3.7038],
+      zoom: 13,
+      preferCanvas: true,
+    });
+
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+      subdomains: 'abcd',
+      maxZoom: 20,
+      attribution: '&copy; OpenStreetMap contributors &copy; CARTO',
+    }).addTo(map);
+
     proj4.defs(
       SOURCE_EPSG,
       '+proj=utm +zone=30 +ellps=GRS80 +units=m +no_defs +type=crs'
@@ -240,108 +367,277 @@
       '+proj=longlat +datum=WGS84 +no_defs +type=crs'
     );
 
-    // =========================
-    // DOM
-    // =========================
-    const weekSelect = document.getElementById('weekSelect');
-    const terraceIdInput = document.getElementById('terraceIdInput');
-    const rotuloInput = document.getElementById('rotuloInput');
-    const loadBtn = document.getElementById('loadBtn');
-    const fitBtn = document.getElementById('fitBtn');
-    const hourSlider = document.getElementById('hourSlider');
-    const hourValue = document.getElementById('hourValue');
-    const playBtn = document.getElementById('playBtn');
-    const stopBtn = document.getElementById('stopBtn');
-    const statusBox = document.getElementById('status');
-    const summaryBox = document.getElementById('summary');
-    const bucketBaseLabel = document.getElementById('bucketBaseLabel');
-
-    bucketBaseLabel.textContent = BUCKET_BASE_URL;
-
-    // =========================
-    // MAP
-    // =========================
-    const map = L.map('map', {
-      center: [40.4168, -3.7038],
-      zoom: 13,
-      preferCanvas: true,
-    });
-
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      maxZoom: 20,
-      attribution: '&copy; OpenStreetMap contributors',
-    }).addTo(map);
-
-    let currentLayer = null;
-    let terraceOutlineLayer = null;
-    let currentFilteredFeatures = [];
-    let playTimer = null;
-
-    // =========================
-    // INIT UI
-    // =========================
-    for (let w = 1; w <= 52; w += 1) {
-      const option = document.createElement('option');
-      option.value = String(w);
-      option.textContent = `Semana ${String(w).padStart(2, '0')}`;
-      if (w === DEFAULT_WEEK) option.selected = true;
-      weekSelect.appendChild(option);
-    }
-
-    hourSlider.min = String(HOUR_MIN);
-    hourSlider.max = String(HOUR_MAX);
-    hourSlider.value = String(HOUR_MIN);
-    terraceIdInput.value = String(DEFAULT_TERRACE_ID);
-    updateHourLabel(Number(hourSlider.value));
-
-    // =========================
-    // HELPERS
-    // =========================
-    function setStatus(message, isError = false) {
-      statusBox.textContent = message;
-      statusBox.style.color = isError ? '#b42318' : '#666';
+    function setStatus(msg, isError = false) {
+      statusBox.textContent = msg;
+      statusBox.style.color = isError ? 'var(--error)' : 'var(--muted)';
     }
 
     function updateHourLabel(hour) {
       hourValue.textContent = `${String(hour).padStart(2, '0')}:00`;
     }
 
-    function buildWeekFileName(week) {
-      return `${FILE_PREFIX}W${String(week).padStart(2, '0')}${FILE_SUFFIX}`;
+    function clampHour(hour) {
+      return Math.max(6, Math.min(22, Number(hour)));
     }
 
-    function buildWeekUrl(week) {
-      return `${BUCKET_BASE_URL}/${buildWeekFileName(week)}`;
+    function isFiniteNumber(v) {
+      return Number.isFinite(Number(v));
+    }
+
+    function toNumberOrNull(v) {
+      if (v === null || v === undefined) return null;
+      const n = Number(v);
+      return Number.isFinite(n) ? n : null;
+    }
+
+    function formatArea(v) {
+      const n = toNumberOrNull(v);
+      if (n === null) return '—';
+      return `${n.toFixed(2)} m²`;
+    }
+
+    function formatPercent(v) {
+      const n = toNumberOrNull(v);
+      if (n === null) return '—';
+      const pct = n <= 1 ? n * 100 : n;
+      return `${pct.toFixed(1)} %`;
+    }
+
+    function escapeHtml(str) {
+      return String(str ?? '')
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;')
+        .replaceAll("'", '&#039;');
+    }
+
+    function normalizeText(text) {
+      return String(text ?? '')
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .toLowerCase()
+        .trim()
+        .replace(/\s+/g, ' ');
+    }
+
+    function clearLayer() {
+      if (currentLayer) {
+        map.removeLayer(currentLayer);
+        currentLayer = null;
+      }
+    }
+
+    function resetSummary() {
+      metricShadowPct.textContent = '—';
+      metricShadowArea.textContent = '—';
+      metricTerraceArea.textContent = '—';
+      metricWeek.textContent = '—';
+      summaryDetails.innerHTML = `<div class="detail-item">Rótulo: —</div>`;
+      currentRecord = null;
+    }
+
+    function toYMD(value) {
+      if (!value) return null;
+
+      if (typeof value === 'string') {
+        const m = value.match(/^(\d{4}-\d{2}-\d{2})/);
+        if (m) return m[1];
+      }
+
+      const d = new Date(value);
+      if (Number.isNaN(d.getTime())) return null;
+
+      const y = d.getFullYear();
+      const m = String(d.getMonth() + 1).padStart(2, '0');
+      const day = String(d.getDate()).padStart(2, '0');
+      return `${y}-${m}-${day}`;
+    }
+
+    function getHourFromDatetime(value) {
+      if (!value) return null;
+
+      if (typeof value === 'string') {
+        const m = value.match(/T(\d{2}):/);
+        if (m) return Number(m[1]);
+
+        const m2 = value.match(/ (\d{2}):/);
+        if (m2) return Number(m2[1]);
+      }
+
+      const d = new Date(value);
+      if (Number.isNaN(d.getTime())) return null;
+
+      return d.getHours();
+    }
+
+    function getIsoWeekInfo(dateString) {
+      const date = new Date(dateString + 'T00:00:00');
+      if (Number.isNaN(date.getTime())) {
+        throw new Error(`Fecha inválida: ${dateString}`);
+      }
+
+      const tmp = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+      const dayNum = tmp.getUTCDay() || 7;
+      tmp.setUTCDate(tmp.getUTCDate() + 4 - dayNum);
+
+      const isoYear = tmp.getUTCFullYear();
+      const yearStart = new Date(Date.UTC(isoYear, 0, 1));
+      const isoWeek = Math.ceil((((tmp - yearStart) / 86400000) + 1) / 7);
+
+      return { isoYear, isoWeek };
+    }
+
+    function getIsoWeekDate(isoYear, isoWeek, isoWeekday) {
+      const simple = new Date(Date.UTC(isoYear, 0, 4 + (isoWeek - 1) * 7));
+      const dow = simple.getUTCDay() || 7;
+      simple.setUTCDate(simple.getUTCDate() - dow + isoWeekday);
+
+      const y = simple.getUTCFullYear();
+      const m = String(simple.getUTCMonth() + 1).padStart(2, '0');
+      const d = String(simple.getUTCDate()).padStart(2, '0');
+
+      return `${y}-${m}-${d}`;
+    }
+
+    function getRepresentativeWednesdayDateForSelectedWeek(selectedDate) {
+      const { isoWeek } = getIsoWeekInfo(selectedDate);
+      return getIsoWeekDate(FILE_YEAR_IN_BUCKET, isoWeek, 3);
+    }
+
+    function buildWeekFileName(dateString) {
+      const { isoWeek } = getIsoWeekInfo(dateString);
+      return `${FILE_BASENAME}_${FILE_YEAR_IN_BUCKET}_W${String(isoWeek).padStart(2, '0')}${FILE_SUFFIX}`;
+    }
+
+    function buildWeekUrl(dateString) {
+      return `${BUCKET_BASE_URL}/${buildWeekFileName(dateString)}`;
+    }
+
+    function buildWeekAlias(dateString) {
+      const { isoWeek } = getIsoWeekInfo(dateString);
+      return `week_${FILE_YEAR_IN_BUCKET}_W${String(isoWeek).padStart(2, '0')}.parquet`;
     }
 
     function transformCoords25830To4326(coords) {
       if (!Array.isArray(coords)) return coords;
-      if (typeof coords[0] === 'number' && typeof coords[1] === 'number') {
-        const [x, y] = coords;
-        const [lon, lat] = proj4(SOURCE_EPSG, TARGET_EPSG, [x, y]);
+
+      if (coords.length >= 2 && !Array.isArray(coords[0])) {
+        const x = Number(coords[0]);
+        const y = Number(coords[1]);
+
+        if (!isFiniteNumber(x) || !isFiniteNumber(y)) {
+          throw new Error(`Coordenadas no finitas detectadas`);
+        }
+
+        const result = proj4(SOURCE_EPSG, TARGET_EPSG, [x, y]);
+        const lon = Number(result[0]);
+        const lat = Number(result[1]);
+
+        if (!isFiniteNumber(lon) || !isFiniteNumber(lat)) {
+          throw new Error(`Reproyección inválida`);
+        }
+
         return [lon, lat];
       }
+
       return coords.map(transformCoords25830To4326);
     }
 
     function reprojectGeometry(geometry) {
-      if (!geometry || !geometry.coordinates) return geometry;
+      if (!geometry || !geometry.type) return null;
+
+      if (geometry.type === 'GeometryCollection') {
+        return {
+          ...geometry,
+          geometries: (geometry.geometries || [])
+            .map(reprojectGeometry)
+            .filter(Boolean),
+        };
+      }
+
+      if (!geometry.coordinates) return null;
+
       return {
         ...geometry,
         coordinates: transformCoords25830To4326(geometry.coordinates),
       };
     }
 
-    function toLeafletFeature(row) {
+    function toUint8Array(value) {
+      if (!value) return null;
+
+      if (value instanceof Uint8Array) return value;
+      if (value instanceof ArrayBuffer) return new Uint8Array(value);
+      if (Array.isArray(value)) return new Uint8Array(value);
+
+      if (ArrayBuffer.isView(value)) {
+        return new Uint8Array(value.buffer, value.byteOffset, value.byteLength);
+      }
+
+      if (typeof value === 'object') {
+        const vals = Object.values(value);
+        if (vals.length && vals.every(v => Number.isFinite(Number(v)))) {
+          return new Uint8Array(vals.map(v => Number(v)));
+        }
+      }
+
+      return null;
+    }
+
+    function isLikelyGeoJSONGeometry(value) {
+      return (
+        value &&
+        typeof value === 'object' &&
+        typeof value.type === 'string' &&
+        (Array.isArray(value.coordinates) || Array.isArray(value.geometries))
+      );
+    }
+
+    function decodeWkbGeometry(value) {
+      if (!value) {
+        throw new Error('geometry vacía');
+      }
+
+      if (typeof value === 'string') {
+        const geom = wkx.Geometry.parse(value);
+        return geom.toGeoJSON();
+      }
+
+      const bytes = toUint8Array(value);
+      if (!bytes) {
+        throw new Error(`No se pudo convertir geometry`);
+      }
+
+      const geom = wkx.Geometry.parse(Buffer.from(bytes));
+      return geom.toGeoJSON();
+    }
+
+    function getGeometryFromRow(row, rowIndex) {
+      const raw = row.geometry;
+      if (!raw) throw new Error(`Fila ${rowIndex}: geometry vacía`);
+
+      if (isLikelyGeoJSONGeometry(raw)) return raw;
+      return decodeWkbGeometry(raw);
+    }
+
+    function rowToFeature(row, rowIndex = null) {
+      const sourceGeometry = getGeometryFromRow(row, rowIndex);
+      const geom4326 = reprojectGeometry(sourceGeometry);
+
+      if (!geom4326) {
+        throw new Error(`Fila ${rowIndex}: no se pudo reproyectar la geometría`);
+      }
+
       return {
         type: 'Feature',
-        geometry: reprojectGeometry(row.geometry),
+        geometry: geom4326,
         properties: {
-          terraza_id: row.terraza_id,
-          rotulo: row.rotulo,
+          terraza_id: Number(row.terraza_id),
+          rotulo: row.rotulo ?? '',
           datetime: row.datetime,
-          date: row.date,
-          hour: Number(row.hour),
+          date: toYMD(row.date ?? row.datetime),
+          hour: getHourFromDatetime(row.datetime),
           shadow_area_m2: row.shadow_area_m2,
           shadow_pct: row.shadow_pct,
           terrace_area_m2: row.terrace_area_m2,
@@ -350,206 +646,456 @@
       };
     }
 
-    function clearLayers() {
-      if (currentLayer) {
-        map.removeLayer(currentLayer);
-        currentLayer = null;
+    function normalizeDuckRow(row) {
+      if (!row) return row;
+      if (typeof row.toJSON === 'function') return row.toJSON();
+
+      const obj = {};
+      for (const key of Object.keys(row)) {
+        const value = row[key];
+        obj[key] = (value && typeof value.toJSON === 'function') ? value.toJSON() : value;
       }
-      if (terraceOutlineLayer) {
-        map.removeLayer(terraceOutlineLayer);
-        terraceOutlineLayer = null;
+      return obj;
+    }
+
+    async function arrowTableToRows(table) {
+      if (!table) return [];
+      const arr = table.toArray ? table.toArray() : [];
+      return arr.map(normalizeDuckRow);
+    }
+
+    async function loadRotulosCatalog() {
+      try {
+        const res = await fetch(ROTULOS_JSON_URL, { cache: 'no-store' });
+        if (!res.ok) {
+          throw new Error(`No se pudo leer ${ROTULOS_JSON_URL}`);
+        }
+
+        const data = await res.json();
+        if (!Array.isArray(data)) {
+          throw new Error('El JSON de rótulos no es un array');
+        }
+
+        rotulosCatalog = data.map(item => ({
+          ...item,
+          terraza_id: Number(item.terraza_id),
+          _search_blob: normalizeText([
+            item.label_busqueda,
+            item.rotulo_formateado,
+            item.rotulo_original,
+            item.direccion_resumen,
+            item.nombre_via,
+            item.numero_via
+          ].filter(Boolean).join(' '))
+        })).filter(item => Number.isFinite(item.terraza_id));
+      } catch (err) {
+        console.error(err);
+        setStatus('No se pudo cargar el catálogo de rótulos.', true);
       }
     }
 
-    function renderHour(hour) {
-      if (!currentFilteredFeatures.length) {
-        clearLayers();
-        summaryBox.textContent = 'No hay datos para renderizar.';
+    function getItemDisplayLabel(item) {
+      return item.label_busqueda || item.rotulo_formateado || item.rotulo_original || `Terraza ${item.terraza_id}`;
+    }
+
+    function hideAutocomplete() {
+      autocompleteList.innerHTML = '';
+      autocompleteList.style.display = 'none';
+      currentSuggestions = [];
+      selectedSuggestionIndex = -1;
+    }
+
+    function renderAutocomplete(items) {
+      currentSuggestions = items;
+      selectedSuggestionIndex = -1;
+
+      if (!items.length) {
+        hideAutocomplete();
         return;
       }
 
-      const hourFeatures = currentFilteredFeatures.filter(
-        (f) => Number(f.properties.hour) === Number(hour)
+      autocompleteList.innerHTML = items.map((item, index) => {
+        const title = escapeHtml(getItemDisplayLabel(item));
+        const subtitle = `ID ${item.terraza_id}${item.direccion_resumen ? ' · ' + escapeHtml(item.direccion_resumen) : ''}`;
+
+        return `
+          <div class="autocomplete-item" data-index="${index}">
+            <div class="autocomplete-title">${title}</div>
+            <div class="autocomplete-subtitle">${subtitle}</div>
+          </div>
+        `;
+      }).join('');
+
+      autocompleteList.style.display = 'block';
+
+      autocompleteList.querySelectorAll('.autocomplete-item').forEach(el => {
+        el.addEventListener('mousedown', (e) => {
+          e.preventDefault();
+          const idx = Number(el.dataset.index);
+          selectSuggestion(idx);
+        });
+      });
+    }
+
+    function updateActiveSuggestion() {
+      const items = autocompleteList.querySelectorAll('.autocomplete-item');
+      items.forEach((item, idx) => {
+        item.classList.toggle('active', idx === selectedSuggestionIndex);
+      });
+    }
+
+    function searchCatalog(query) {
+      const q = normalizeText(query);
+      if (!q) return [];
+
+      const starts = [];
+      const contains = [];
+
+      for (const item of rotulosCatalog) {
+        if (!item._search_blob.includes(q)) continue;
+
+        const label = normalizeText(getItemDisplayLabel(item));
+        if (label.startsWith(q)) {
+          starts.push(item);
+        } else {
+          contains.push(item);
+        }
+      }
+
+      return [...starts, ...contains].slice(0, 12);
+    }
+
+    function findCatalogItemById(id) {
+      const numericId = Number(id);
+      if (!Number.isFinite(numericId)) return null;
+      return rotulosCatalog.find(item => Number(item.terraza_id) === numericId) || null;
+    }
+
+    function updateSearchInputFromId(id) {
+      const item = findCatalogItemById(id);
+      if (!item) return;
+      rotuloSearchInput.value = getItemDisplayLabel(item);
+    }
+
+    function selectSuggestion(index) {
+      const item = currentSuggestions[index];
+      if (!item) return;
+
+      terraceIdInput.value = item.terraza_id;
+      rotuloSearchInput.value = getItemDisplayLabel(item);
+      hideAutocomplete();
+      scheduleAutoLoad();
+    }
+
+    async function initDuckDB() {
+      try {
+        const JSDELIVR_BUNDLES = duckdb.getJsDelivrBundles();
+        const bundle = await duckdb.selectBundle(JSDELIVR_BUNDLES);
+
+        if (!bundle) {
+          throw new Error('No se pudo seleccionar un bundle de DuckDB-Wasm');
+        }
+
+        const workerUrl = URL.createObjectURL(
+          new Blob([`importScripts("${bundle.mainWorker}");`], { type: 'text/javascript' })
+        );
+
+        const worker = new Worker(workerUrl);
+        const logger = new duckdb.ConsoleLogger();
+
+        db = new duckdb.AsyncDuckDB(logger, worker);
+        await db.instantiate(bundle.mainModule, bundle.pthreadWorker);
+
+        URL.revokeObjectURL(workerUrl);
+
+        conn = await db.connect();
+        await conn.query(`SET enable_progress_bar = false;`);
+        await conn.query(`SET threads = 1;`);
+
+        setStatus('Listo.');
+      } catch (err) {
+        setStatus('Error inicializando DuckDB-Wasm.', true);
+        console.error(err);
+      }
+    }
+
+    async function ensureWeekRegistered(dateString) {
+      if (!db) throw new Error('DuckDB no está inicializado');
+
+      const alias = buildWeekAlias(dateString);
+      const url = buildWeekUrl(dateString);
+
+      if (registeredWeekAliases.has(alias)) {
+        return { alias, url };
+      }
+
+      await db.registerFileURL(
+        alias,
+        url,
+        duckdb.DuckDBDataProtocol.HTTP,
+        true
       );
 
-      if (currentLayer) map.removeLayer(currentLayer);
-      if (terraceOutlineLayer) map.removeLayer(terraceOutlineLayer);
+      registeredWeekAliases.add(alias);
+      return { alias, url };
+    }
 
-      currentLayer = L.geoJSON(hourFeatures, {
+    function updateSummary(record, selectedDate) {
+      if (!record) {
+        resetSummary();
+        return;
+      }
+
+      const { isoYear, isoWeek } = getIsoWeekInfo(selectedDate);
+
+      metricShadowPct.textContent = formatPercent(record.shadow_pct);
+      metricShadowArea.textContent = formatArea(record.shadow_area_m2);
+      metricTerraceArea.textContent = formatArea(record.terrace_area_m2);
+      metricWeek.textContent = `${isoYear}-W${String(isoWeek).padStart(2, '0')}`;
+
+      summaryDetails.innerHTML = `
+        <div class="detail-item"><strong>Rótulo:</strong> ${escapeHtml(record.rotulo || '—')}</div>
+      `;
+    }
+
+    function renderSelectedHour() {
+      clearLayer();
+
+      const features = currentDayFeatures;
+
+      if (!features.length) {
+        currentRecord = null;
+        updateSummary(null, dateInput.value);
+        return;
+      }
+
+      currentLayer = L.geoJSON(features, {
         style: () => ({
-          color: '#1d4ed8',
+          color: '#0b57d0',
           weight: 2,
-          fillColor: '#60a5fa',
-          fillOpacity: 0.35,
+          fillColor: '#0b57d0',
+          fillOpacity: 0.28,
         }),
         onEachFeature: (feature, layer) => {
           const p = feature.properties;
           layer.bindPopup(`
-            <strong>Terraza ${p.terraza_id}</strong><br>
-            ${p.rotulo || '-'}<br>
-            Fecha: ${p.date || '-'}<br>
-            Hora: ${String(p.hour).padStart(2, '0')}:00<br>
-            Sombra: ${formatNumber(p.shadow_area_m2)} m²<br>
-            % sombra: ${formatNumber(p.shadow_pct)} %<br>
-            Área terraza: ${formatNumber(p.terrace_area_m2)} m²
+            <strong>Terraza ${escapeHtml(p.terraza_id)}</strong><br>
+            ${escapeHtml(p.rotulo || '(sin rótulo)')}<br>
+            Área sombra: ${escapeHtml(formatArea(p.shadow_area_m2))}<br>
+            % sombra: ${escapeHtml(formatPercent(p.shadow_pct))}<br>
+            Área terraza: ${escapeHtml(formatArea(p.terrace_area_m2))}
           `);
-        },
+        }
       }).addTo(map);
 
-      if (hourFeatures.length) {
+      try {
         const bounds = currentLayer.getBounds();
         if (bounds.isValid()) {
-          terraceOutlineLayer = L.rectangle(bounds, {
-            color: '#111827',
-            weight: 1,
-            fill: false,
-            dashArray: '4 4',
-          }).addTo(map);
+          map.fitBounds(bounds, {
+            padding: [40, 40],
+            maxZoom: 17
+          });
         }
+      } catch (err) {
+        console.error(err);
       }
 
-      const terraceIds = [...new Set(currentFilteredFeatures.map(f => f.properties.terraza_id))];
-      const rotulos = [...new Set(currentFilteredFeatures.map(f => f.properties.rotulo).filter(Boolean))];
-      const dates = [...new Set(currentFilteredFeatures.map(f => f.properties.date).filter(Boolean))].sort();
-      const shownCount = hourFeatures.length;
-
-      const sample = hourFeatures[0]?.properties;
-      summaryBox.textContent = [
-        `Semana: ${String(weekSelect.value).padStart(2, '0')}`,
-        `Terraza(s): ${terraceIds.join(', ') || '-'}`,
-        `Rótulo(s): ${rotulos.join(' | ') || '-'}`,
-        `Hora actual: ${String(hour).padStart(2, '0')}:00`,
-        `Geometrías visibles: ${shownCount}`,
-        `Fechas en la selección: ${dates.length}`,
-        `Área terraza: ${sample ? formatNumber(sample.terrace_area_m2) : '-'} m²`,
-      ].join('\n');
+      currentRecord = features[0].properties;
+      updateSummary(currentRecord, dateInput.value);
     }
 
-    function formatNumber(value) {
-      if (value === null || value === undefined || Number.isNaN(Number(value))) return '-';
-      return Number(value).toLocaleString('es-ES', {
-        minimumFractionDigits: 0,
-        maximumFractionDigits: 2,
-      });
+    function buildDailyQuery(alias, terraceId, selectedDate, selectedHour) {
+      const representativeDate = getRepresentativeWednesdayDateForSelectedWeek(selectedDate);
+
+      return `
+        SELECT
+          terraza_id,
+          rotulo,
+          datetime,
+          date,
+          shadow_area_m2,
+          shadow_pct,
+          terrace_area_m2,
+          building_id,
+          geometry
+        FROM read_parquet('${alias}')
+        WHERE terraza_id = ${Number(terraceId)}
+          AND substr(
+            coalesce(cast(date as varchar), cast(datetime as varchar)),
+            1,
+            10
+          ) = '${representativeDate}'
+          AND EXTRACT(HOUR FROM datetime) = ${Number(selectedHour)}
+        ORDER BY datetime
+      `;
     }
 
-    async function loadWeekData() {
-      stopAnimation();
-      clearLayers();
-      currentFilteredFeatures = [];
+    async function loadSelection() {
+      if (!db || !conn) {
+        setStatus('DuckDB-Wasm aún no está cargado.', true);
+        return;
+      }
 
-      const week = Number(weekSelect.value);
+      const selectedDate = dateInput.value;
+      const selectedHour = Number(hourSlider.value);
       const terraceId = Number(terraceIdInput.value);
-      const rotulo = rotuloInput.value.trim().toLowerCase();
-      const url = buildWeekUrl(week);
 
-      setStatus(`Cargando ${buildWeekFileName(week)}...`);
+      if (!selectedDate) {
+        setStatus('Selecciona una fecha.', true);
+        return;
+      }
+
+      if (selectedDate < MIN_DATE || selectedDate > MAX_DATE) {
+        setStatus(`La fecha debe estar entre ${MIN_DATE} y ${MAX_DATE}.`, true);
+        return;
+      }
+
+      if (!Number.isInteger(terraceId) || terraceId <= 0) {
+        setStatus('Introduce un ID de terraza válido.', true);
+        return;
+      }
 
       try {
-        const file = await asyncBufferFromUrl({ url });
-        const rows = await parquetReadObjects({
-          file,
-          columns: [
-            'terraza_id',
-            'rotulo',
-            'datetime',
-            'date',
-            'hour',
-            'shadow_area_m2',
-            'shadow_pct',
-            'terrace_area_m2',
-            'building_id',
-            'geometry',
-          ],
-        });
+        setStatus('Consultando...');
 
-        const filteredRows = rows.filter((row) => {
-          const matchesTerrace = Number(row.terraza_id) === terraceId;
-          const matchesRotulo = !rotulo || String(row.rotulo || '').toLowerCase().includes(rotulo);
-          return matchesTerrace && matchesRotulo;
-        });
+        const { alias } = await ensureWeekRegistered(selectedDate);
+        const sql = buildDailyQuery(alias, terraceId, selectedDate, selectedHour);
 
-        if (!filteredRows.length) {
-          summaryBox.textContent = 'No se encontraron filas con esos filtros.';
-          setStatus('Carga completada, pero no hubo coincidencias.', true);
+        const result = await conn.query(sql);
+        const rows = await arrowTableToRows(result);
+
+        currentDayFeatures = rows.map((row, i) => {
+          try {
+            return rowToFeature(row, i);
+          } catch (err) {
+            console.error(err);
+            return null;
+          }
+        }).filter(Boolean);
+
+        if (!currentDayFeatures.length) {
+          clearLayer();
+          resetSummary();
+          setStatus('Sin datos para esa selección.');
           return;
         }
 
-        currentFilteredFeatures = filteredRows
-          .filter((row) => row.geometry)
-          .map(toLeafletFeature)
-          .sort((a, b) => Number(a.properties.hour) - Number(b.properties.hour));
-
-        updateHourLabel(Number(hourSlider.value));
-        renderHour(Number(hourSlider.value));
-
-        if (currentLayer) {
-          const bounds = currentLayer.getBounds();
-          if (bounds.isValid()) map.fitBounds(bounds.pad(0.2));
-        }
-
-        setStatus(
-          `Carga completada. ${filteredRows.length} registros filtrados para terraza_id=${terraceId}.`
-        );
-      } catch (error) {
-        console.error(error);
-        setStatus(
-          'Error cargando el parquet. Revisa que la URL exacta del archivo exista y que R2 permita CORS desde GitHub Pages.',
-          true
-        );
-        summaryBox.textContent = [
-          'Error de carga.',
-          '',
-          `URL intentada: ${url}`,
-          '',
-          'Comprueba:',
-          '1) que el objeto exista con ese nombre exacto',
-          '2) que sea público',
-          '3) que tenga cabeceras CORS válidas',
-        ].join('\n');
+        setStatus('');
+        renderSelectedHour();
+      } catch (err) {
+        clearLayer();
+        currentDayFeatures = [];
+        resetSummary();
+        setStatus('Error consultando los datos.', true);
+        console.error(err);
       }
     }
 
-    function fitToData() {
-      if (!currentLayer) return;
-      const bounds = currentLayer.getBounds();
-      if (bounds.isValid()) map.fitBounds(bounds.pad(0.2));
+    function scheduleAutoLoad() {
+      clearTimeout(autoLoadTimeout);
+      autoLoadTimeout = setTimeout(() => {
+        loadSelection();
+      }, 120);
     }
 
-    function startAnimation() {
-      if (!currentFilteredFeatures.length || playTimer) return;
-      playTimer = window.setInterval(() => {
-        let nextHour = Number(hourSlider.value) + 1;
-        if (nextHour > HOUR_MAX) nextHour = HOUR_MIN;
-        hourSlider.value = String(nextHour);
-        updateHourLabel(nextHour);
-        renderHour(nextHour);
-      }, 900);
-    }
+    rotuloSearchInput.addEventListener('input', () => {
+      const query = rotuloSearchInput.value.trim();
 
-    function stopAnimation() {
-      if (playTimer) {
-        window.clearInterval(playTimer);
-        playTimer = null;
-      }
-    }
+      const suggestions = searchCatalog(query);
+      renderAutocomplete(suggestions);
 
-    // =========================
-    // EVENTS
-    // =========================
-    hourSlider.addEventListener('input', () => {
-      const hour = Number(hourSlider.value);
-      updateHourLabel(hour);
-      renderHour(hour);
+      if (!query) return;
     });
 
-    loadBtn.addEventListener('click', loadWeekData);
-    fitBtn.addEventListener('click', fitToData);
-    playBtn.addEventListener('click', startAnimation);
-    stopBtn.addEventListener('click', stopAnimation);
+    rotuloSearchInput.addEventListener('focus', () => {
+      const query = rotuloSearchInput.value.trim();
+      if (!query) return;
+      renderAutocomplete(searchCatalog(query));
+    });
 
-    // Autocarga inicial
-    loadWeekData();
+    rotuloSearchInput.addEventListener('keydown', (e) => {
+      if (autocompleteList.style.display !== 'block') {
+        if (e.key === 'Enter') {
+          const query = rotuloSearchInput.value.trim();
+          const suggestions = searchCatalog(query);
+          if (suggestions.length === 1) {
+            e.preventDefault();
+            terraceIdInput.value = suggestions[0].terraza_id;
+            rotuloSearchInput.value = getItemDisplayLabel(suggestions[0]);
+            hideAutocomplete();
+            loadSelection();
+          }
+        }
+        return;
+      }
+
+      if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        selectedSuggestionIndex = Math.min(selectedSuggestionIndex + 1, currentSuggestions.length - 1);
+        updateActiveSuggestion();
+      } else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        selectedSuggestionIndex = Math.max(selectedSuggestionIndex - 1, 0);
+        updateActiveSuggestion();
+      } else if (e.key === 'Enter') {
+        e.preventDefault();
+        if (selectedSuggestionIndex >= 0) {
+          selectSuggestion(selectedSuggestionIndex);
+        } else if (currentSuggestions.length === 1) {
+          selectSuggestion(0);
+        }
+      } else if (e.key === 'Escape') {
+        hideAutocomplete();
+      }
+    });
+
+    rotuloSearchInput.addEventListener('blur', () => {
+      setTimeout(() => hideAutocomplete(), 150);
+    });
+
+    terraceIdInput.addEventListener('change', () => {
+      updateSearchInputFromId(terraceIdInput.value);
+      scheduleAutoLoad();
+    });
+
+    terraceIdInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        updateSearchInputFromId(terraceIdInput.value);
+        loadSelection();
+      }
+    });
+
+    dateInput.addEventListener('change', () => {
+      scheduleAutoLoad();
+    });
+
+    dateInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        loadSelection();
+      }
+    });
+
+    hourSlider.addEventListener('input', () => {
+      const hour = clampHour(hourSlider.value);
+      hourSlider.value = hour;
+      updateHourLabel(hour);
+      scheduleAutoLoad();
+    });
+
+    document.addEventListener('click', (e) => {
+      if (!autocompleteList.contains(e.target) && e.target !== rotuloSearchInput) {
+        hideAutocomplete();
+      }
+    });
+
+    updateHourLabel(Number(hourSlider.value));
+    resetSummary();
+
+    await loadRotulosCatalog();
+    await initDuckDB();
+
+    updateSearchInputFromId(terraceIdInput.value);
+    await loadSelection();
   </script>
 </body>
 </html>
