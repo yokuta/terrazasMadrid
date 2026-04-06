@@ -38,9 +38,10 @@
       --font-display: 'DM Serif Display', serif;
       --font-body:    'DM Sans', sans-serif;
 
-      --sheet-peek: 132px;
-      --sheet-mid:  48vh;
-      --sheet-full: 84vh;
+      /* móvil más compacto */
+      --sheet-peek: 116px;
+      --sheet-mid:  34vh;
+      --sheet-full: 72vh;
 
       --transition: cubic-bezier(0.32, 0.72, 0, 1);
     }
@@ -153,7 +154,7 @@
       border: 1.5px solid var(--border);
       border-radius: var(--radius-md);
       box-shadow: var(--shadow-lg);
-      max-height: 56vh;
+      max-height: 40vh;
       overflow-y: auto;
       display: none;
       overscroll-behavior: contain;
@@ -231,17 +232,14 @@
     }
 
     #sheet-content {
-      padding: 0 16px 20px;
+      padding: 0 16px 16px;
       overflow-y: auto;
       overscroll-behavior: contain;
     }
 
+    /* en móvil no mostramos el título del sitio arriba */
     #place-header {
       display: none;
-      align-items: flex-start;
-      justify-content: space-between;
-      gap: 12px;
-      margin-bottom: 14px;
     }
 
     #place-name {
@@ -262,7 +260,7 @@
       border: 1px solid var(--border);
       border-radius: var(--radius-md);
       padding: 14px 16px;
-      margin-bottom: 14px;
+      margin-bottom: 12px;
     }
 
     .ring-svg-wrap { flex-shrink: 0; position: relative; width: 64px; height: 64px; }
@@ -291,7 +289,7 @@
     .shadow-info .info-value { font-size: 22px; font-weight: 600; color: var(--bark); line-height: 1; }
     .shadow-info .info-note  { font-size: 11px; color: var(--bark); opacity: 0.45; margin-top: 4px; }
 
-    .ctrl-section { margin-bottom: 14px; }
+    .ctrl-section { margin-bottom: 12px; }
 
     .ctrl-label {
       font-size: 10px;
@@ -492,11 +490,10 @@
 
       #place-header {
         display: flex;
-      }
-
-      #place-name.empty {
-        color: rgba(61,43,31,0.3);
-        font-style: italic;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 12px;
       }
     }
 
@@ -518,6 +515,13 @@
       height: 1px;
       background: var(--border);
       margin: 12px 0;
+    }
+
+    @media (max-width: 719px) {
+      #desktop-label,
+      #place-divider {
+        display: none !important;
+      }
     }
   </style>
 </head>
@@ -657,7 +661,6 @@
     const noResult = document.getElementById('no-result');
     const desktopLabel = document.getElementById('desktop-label');
     const handleArea = document.getElementById('sheet-handle-area');
-    const placeDivider = document.getElementById('place-divider');
 
     const map = L.map('map', {
       center: [40.4168, -3.7038],
@@ -696,9 +699,9 @@
     let isDragging = false;
     let dragDelta = 0;
 
-    const peekH = () => parseInt(getComputedStyle(document.documentElement).getPropertyValue('--sheet-peek')) || 132;
-    const midH = () => window.innerHeight * 0.48;
-    const fullH = () => window.innerHeight * 0.84;
+    const peekH = () => parseInt(getComputedStyle(document.documentElement).getPropertyValue('--sheet-peek')) || 116;
+    const midH = () => window.innerHeight * 0.34;
+    const fullH = () => window.innerHeight * 0.72;
 
     function isMobileLayout() {
       return window.innerWidth < 720;
@@ -1193,8 +1196,9 @@
       placeName.textContent = selectedRotulo;
       placeName.classList.remove('empty');
 
+      /* importante: en móvil NO subimos el panel */
       if (isMobileLayout()) {
-        setSheetState('full');
+        setSheetState('peek');
       } else {
         setSheetState('mid');
       }
@@ -1286,8 +1290,8 @@
     function getFitPadding() {
       if (isMobileLayout()) {
         return {
-          paddingTopLeft: [24, 90],
-          paddingBottomRight: [24, Math.round(window.innerHeight * 0.38)]
+          paddingTopLeft: [24, 110],
+          paddingBottomRight: [24, 180]
         };
       }
 
@@ -1462,16 +1466,7 @@
     });
 
     dateInput.addEventListener('change', () => {
-      if (isMobileLayout()) setSheetState('full');
       scheduleLoad();
-    });
-
-    dateInput.addEventListener('focus', () => {
-      if (isMobileLayout()) setSheetState('full');
-    });
-
-    dateInput.addEventListener('click', () => {
-      if (isMobileLayout()) setSheetState('full');
     });
 
     dateInput.addEventListener('keydown', (e) => {
@@ -1484,22 +1479,12 @@
       const hour = clampHour(hourSlider.value);
       hourSlider.value = hour;
       updateHour(hour);
-      if (isMobileLayout()) setSheetState('full');
       scheduleLoad();
     });
 
-    hourSlider.addEventListener('touchstart', () => {
-      if (isMobileLayout()) setSheetState('full');
-    }, { passive: true });
-
     function checkDesktop() {
-      if (window.innerWidth >= 720) {
-        desktopLabel.style.display = 'block';
-        placeDivider.style.display = '';
-      } else {
-        desktopLabel.style.display = 'none';
-        placeDivider.style.display = 'none';
-      }
+      if (window.innerWidth >= 720) desktopLabel.style.display = 'block';
+      else desktopLabel.style.display = 'none';
     }
 
     function pad2(n) {
