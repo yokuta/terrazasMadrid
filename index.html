@@ -760,23 +760,32 @@
 		  }
 		}
 	  
+	    
+		#ranking-link {
+		  position: absolute;
+		  top: calc(100% + 10px);
+		  right: 4px;
+		  width: 42px;
+		  height: 42px;
+		  border-radius: 50%;
+		  background: rgba(255,255,255,0.96);
+		  border: 1px solid var(--border-2);
+		  box-shadow: var(--shadow-md);
+		  display: flex;
+		  align-items: center;
+		  justify-content: center;
+		  text-decoration: none;
+		  font-size: 20px;
+		  z-index: 410;
+		  backdrop-filter: blur(10px);
+		}
+
+		#ranking-link:hover {
+		  transform: translateY(-1px);
+		}
+			  
 	  
-	  
-	  
-	  
-	  
-	  
-	  
-	  
-	  
-	  
-	  
-	  
-	  
-	  
-	  
-	  
-	  
+
 	  
 	  
 	</style>
@@ -795,6 +804,7 @@
         <button id="search-clear" aria-label="Borrar búsqueda">×</button>
       </div>
       <div id="autocompleteList" role="listbox"></div>
+	  <a id="ranking-link" href="./ranking.html" aria-label="Ir al ranking de terrazas">🏆</a>
     </div>
   </div>
 
@@ -1715,7 +1725,7 @@
 
     async function initDuckDB() {
       try {
-        showStatus('Cargando motor de datos…', false, true);
+        showStatus('Cargando datos…', false, true);
 
         const JSDELIVR_BUNDLES = duckdb.getJsDelivrBundles();
         const bundle = await duckdb.selectBundle(JSDELIVR_BUNDLES);
