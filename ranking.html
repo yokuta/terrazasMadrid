@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Ranking de terrazas · Sol semanal</title>
+
+  <link rel="icon" href="data:,">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Serif+Display&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #eef2f6;
+      --panel: #ffffff;
+      --panel-2: #f4f7fb;
+      --panel-3: #eaf1f8;
+
+      --text: #16202b;
+      --muted: #68798b;
+
+      --brand: #005ea8;
+      --brand-2: #0a74c9;
+      --brand-dark: #0f3d68;
+      --sun: #f59e0b;
+      --sun-2: #fbbf24;
+
+      --border: rgba(22,32,43,0.10);
+      --border-2: rgba(0,94,168,0.12);
+
+      --shadow-sm: 0 2px 8px rgba(15,36,61,0.06);
+      --shadow-md: 0 10px 28px rgba(15,36,61,0.10);
+      --shadow-lg: 0 24px 70px rgba(15,36,61,0.14);
+
+      --radius-sm: 12px;
+      --radius-md: 18px;
+      --radius-lg: 26px;
+
+      --font-display: 'DM Serif Display', serif;
+      --font-body: 'DM Sans', sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-body);
+    }
+
+    .page {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 18px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      margin-bottom: 18px;
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+      color: var(--brand-dark);
+      font-weight: 700;
+      background: var(--panel);
+      border: 1px solid var(--border-2);
+      border-radius: 999px;
+      padding: 10px 14px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    h1 {
+      margin: 0;
+      font-family: var(--font-display);
+      font-size: 32px;
+      line-height: 1.1;
+      color: var(--brand-dark);
+    }
+
+    .subtitle {
+      margin-top: 6px;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .hero {
+      background: linear-gradient(135deg, #ffffff, #eef5fc);
+      border: 1px solid var(--border-2);
+      border-radius: 28px;
+      box-shadow: var(--shadow-md);
+      padding: 22px;
+      margin-bottom: 18px;
+    }
+
+    .controls {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .control-card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 14px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .control-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .control-card input,
+    .control-card select {
+      width: 100%;
+      border: 1px solid var(--border);
+      background: var(--panel-2);
+      border-radius: var(--radius-sm);
+      padding: 11px 12px;
+      font-size: 14px;
+      color: var(--text);
+      font-family: var(--font-body);
+      outline: none;
+    }
+
+    .control-card input:focus,
+    .control-card select:focus {
+      border-color: var(--brand-2);
+      box-shadow: 0 0 0 3px rgba(10,116,201,0.10);
+    }
+
+    .content-grid {
+      display: grid;
+      grid-template-columns: 1.15fr 1fr;
+      gap: 18px;
+    }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--border-2);
+      border-radius: 24px;
+      box-shadow: var(--shadow-md);
+      padding: 18px;
+    }
+
+    .panel-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .panel-title h2 {
+      margin: 0;
+      font-size: 20px;
+      color: var(--brand-dark);
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 11px;
+      border-radius: 999px;
+      background: #fff7e6;
+      color: #9a6700;
+      font-size: 12px;
+      font-weight: 700;
+      border: 1px solid rgba(245,158,11,0.2);
+    }
+
+    .winner-card {
+      background: linear-gradient(135deg, #fff9ec, #fff3d6);
+      border: 1px solid rgba(245,158,11,0.25);
+      border-radius: 22px;
+      padding: 18px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .winner-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 14px;
+      margin-bottom: 12px;
+    }
+
+    .winner-kicker {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #a16207;
+      margin-bottom: 6px;
+    }
+
+    .winner-name {
+      font-size: 28px;
+      line-height: 1.08;
+      font-family: var(--font-display);
+      color: #7c5300;
+      margin: 0;
+    }
+
+    .winner-address {
+      margin-top: 8px;
+      font-size: 14px;
+      color: #8a6a25;
+      line-height: 1.45;
+    }
+
+    .winner-score {
+      min-width: 120px;
+      background: rgba(255,255,255,0.65);
+      border: 1px solid rgba(245,158,11,0.22);
+      border-radius: 18px;
+      padding: 12px;
+      text-align: center;
+    }
+
+    .winner-score-label {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: #a16207;
+      margin-bottom: 6px;
+    }
+
+    .winner-score-value {
+      font-size: 26px;
+      font-weight: 800;
+      color: #7c5300;
+      line-height: 1;
+    }
+
+    .winner-score-sub {
+      margin-top: 6px;
+      font-size: 12px;
+      color: #8a6a25;
+    }
+
+    .winner-meta {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .meta-box {
+      background: rgba(255,255,255,0.7);
+      border: 1px solid rgba(245,158,11,0.18);
+      border-radius: 16px;
+      padding: 10px 12px;
+    }
+
+    .meta-label {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: #a16207;
+      margin-bottom: 5px;
+    }
+
+    .meta-value {
+      font-size: 15px;
+      font-weight: 700;
+      color: #7c5300;
+      line-height: 1.2;
+    }
+
+    .rank-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .rank-item {
+      display: grid;
+      grid-template-columns: 52px 1fr auto;
+      gap: 12px;
+      align-items: center;
+      padding: 14px;
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      background: var(--panel-2);
+    }
+
+    .rank-pos {
+      width: 52px;
+      height: 52px;
+      border-radius: 16px;
+      background: linear-gradient(135deg, var(--brand), var(--brand-2));
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 18px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .rank-main {
+      min-width: 0;
+    }
+
+    .rank-name {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--brand-dark);
+      line-height: 1.25;
+      margin-bottom: 4px;
+    }
+
+    .rank-address {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.4;
+    }
+
+    .rank-score {
+      text-align: right;
+      min-width: 88px;
+    }
+
+    .rank-score-value {
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--brand-dark);
+      line-height: 1;
+    }
+
+    .rank-score-label {
+      margin-top: 4px;
+      font-size: 11px;
+      color: var(--muted);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .status {
+      margin-top: 14px;
+      padding: 11px 14px;
+      border-radius: 14px;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.4;
+      white-space: pre-line;
+    }
+
+    .empty {
+      padding: 22px;
+      border-radius: 18px;
+      background: var(--panel-2);
+      border: 1px dashed var(--border);
+      color: var(--muted);
+      text-align: center;
+      font-size: 14px;
+    }
+
+    @media (max-width: 980px) {
+      .controls,
+      .content-grid,
+      .winner-meta {
+        grid-template-columns: 1fr;
+      }
+
+      .winner-top {
+        flex-direction: column;
+      }
+
+      .winner-score {
+        width: 100%;
+      }
+
+      .rank-item {
+        grid-template-columns: 44px 1fr;
+      }
+
+      .rank-score {
+        grid-column: 2;
+        text-align: left;
+      }
+
+      h1 {
+        font-size: 21px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="topbar">
+      <a class="back-link" href="./index.html">← Volver al visor</a>
+    </div>
+
+    <section class="hero">
+      <h1>Terrazas con más sol</h1>
+      <div class="controls">
+        <div class="control-card">
+          <div class="control-label">Fecha</div>
+          <input id="weekDateInput" type="date" min="2026-01-01" max="2026-12-31" />
+        </div>
+
+        <div class="control-card">
+          <div class="control-label">Barrio</div>
+          <select id="barrioSelect">
+            <option value="">Todo Madrid</option>
+          </select>
+        </div>
+
+        <div class="control-card">
+          <div class="control-label">Hora inicio</div>
+          <select id="hourStartSelect"></select>
+        </div>
+
+        <div class="control-card">
+          <div class="control-label">Hora fin</div>
+          <select id="hourEndSelect"></select>
+        </div>
+      </div>
+
+      <div id="statusBox" class="status">Inicializando…</div>
+    </section>
+
+    <div class="content-grid">
+      <section class="panel">
+        <div class="panel-title">
+          <h2>Ganadora semanal</h2>
+          <div class="chip">☀️ Menos sombra = más sol</div>
+        </div>
+        <div id="winnerContainer"></div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-title">
+          <h2>Top 15 terrazas</h2>
+          <div id="listScopeChip" class="chip">Todo Madrid</div>
+        </div>
+        <div id="rankingContainer" class="rank-list"></div>
+      </section>
+    </div>
+  </div>
+
+  <script type="module">
+    import * as duckdb from 'https://cdn.jsdelivr.net/npm/@duckdb/duckdb-wasm@1.33.1-dev20.0/+esm';
+
+    const BUCKET_BASE_URL = 'https://pub-048f4919d8bc472898a82c1bca238348.r2.dev/weekly_parquet';
+    const FILE_YEAR_IN_BUCKET = 2025;
+    const FILE_BASENAME = 'terrace_shadows';
+    const FILE_SUFFIX = '.parquet';
+    const TERRACES_GEOJSON_URL = './terrazas.geojson';
+
+    const MIN_DATE = '2026-01-01';
+    const MAX_DATE = '2026-12-31';
+
+    let db = null;
+    let conn = null;
+    let terracesGeojson = null;
+    let terracesById = new Map();
+    let registeredWeekAliases = new Set();
+
+    const weekDateInput = document.getElementById('weekDateInput');
+    const barrioSelect = document.getElementById('barrioSelect');
+    const hourStartSelect = document.getElementById('hourStartSelect');
+    const hourEndSelect = document.getElementById('hourEndSelect');
+    const statusBox = document.getElementById('statusBox');
+    const winnerContainer = document.getElementById('winnerContainer');
+    const rankingContainer = document.getElementById('rankingContainer');
+    const listScopeChip = document.getElementById('listScopeChip');
+
+    function setStatus(msg, isError = false) {
+      statusBox.textContent = msg;
+      statusBox.style.color = isError ? '#a61d24' : '';
+    }
+
+    function escapeHtml(str) {
+      return String(str ?? '')
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;')
+        .replaceAll("'", '&#039;');
+    }
+
+    function pad2(n) {
+      return String(n).padStart(2, '0');
+    }
+
+    function clampHour(hour) {
+      return Math.max(6, Math.min(21, Number(hour)));
+    }
+
+    function normalizeText(text) {
+      return String(text ?? '')
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .toLowerCase()
+        .trim()
+        .replace(/\s+/g, ' ');
+    }
+
+    function toNumberOrNull(v) {
+      const n = Number(v);
+      return Number.isFinite(n) ? n : null;
+    }
+
+    function formatPct(v) {
+      const n = toNumberOrNull(v);
+      if (n === null) return '—';
+      return `${n.toFixed(1)} %`;
+    }
+
+    function getIsoWeekInfo(dateString) {
+      const date = new Date(dateString + 'T00:00:00');
+      const tmp = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+      const dayNum = tmp.getUTCDay() || 7;
+      tmp.setUTCDate(tmp.getUTCDate() + 4 - dayNum);
+
+      const isoYear = tmp.getUTCFullYear();
+      const yearStart = new Date(Date.UTC(isoYear, 0, 1));
+      const isoWeek = Math.ceil((((tmp - yearStart) / 86400000) + 1) / 7);
+
+      return { isoYear, isoWeek };
+    }
+
+    function buildWeekFileName(dateString) {
+      const { isoWeek } = getIsoWeekInfo(dateString);
+      return `${FILE_BASENAME}_${FILE_YEAR_IN_BUCKET}_W${String(isoWeek).padStart(2, '0')}${FILE_SUFFIX}`;
+    }
+
+    function buildWeekUrl(dateString) {
+      return `${BUCKET_BASE_URL}/${buildWeekFileName(dateString)}`;
+    }
+
+    function buildWeekAlias(dateString) {
+      const { isoWeek } = getIsoWeekInfo(dateString);
+      return `week_${FILE_YEAR_IN_BUCKET}_W${String(isoWeek).padStart(2, '0')}.parquet`;
+    }
+
+    function getCurrentDateClamped() {
+      const now = new Date();
+      let ymd = `${now.getFullYear()}-${pad2(now.getMonth() + 1)}-${pad2(now.getDate())}`;
+      if (ymd < MIN_DATE) ymd = MIN_DATE;
+      if (ymd > MAX_DATE) ymd = MAX_DATE;
+      return ymd;
+    }
+
+    function initHourSelectors() {
+      hourStartSelect.innerHTML = '';
+      hourEndSelect.innerHTML = '';
+
+      for (let h = 6; h <= 21; h++) {
+        const o1 = document.createElement('option');
+        o1.value = String(h);
+        o1.textContent = `${pad2(h)}:00`;
+        hourStartSelect.appendChild(o1);
+
+        const o2 = document.createElement('option');
+        o2.value = String(h);
+        o2.textContent = `${pad2(h)}:00`;
+        hourEndSelect.appendChild(o2);
+      }
+
+      hourStartSelect.value = '10';
+      hourEndSelect.value = '13';
+    }
+
+    function ensureValidHourRange() {
+      let start = clampHour(hourStartSelect.value);
+      let end = clampHour(hourEndSelect.value);
+
+      if (end < start) {
+        end = start;
+        hourEndSelect.value = String(end);
+      }
+
+      return { start, end };
+    }
+
+    function buildAddress(props) {
+      const parts = [];
+      const street = [props.desc_clase, props.desc_nombre].filter(Boolean).join(' ').replace(/\s+/g, ' ').trim();
+      const num = String(props.num_terraza ?? '').trim();
+      const barrio = String(props.desc_barrio_local ?? '').trim();
+
+      if (street) parts.push(street);
+      if (num) parts.push(num);
+      if (barrio) parts.push(barrio);
+
+      return parts.join(' · ') || 'Dirección no disponible';
+    }
+
+    function getBarrio(props) {
+      return String(props?.desc_barrio_local ?? '').trim();
+    }
+
+    async function loadTerracesGeojson() {
+      const res = await fetch(TERRACES_GEOJSON_URL, { cache: 'no-store' });
+      if (!res.ok) throw new Error(`No se pudo leer ${TERRACES_GEOJSON_URL}`);
+
+      const data = await res.json();
+      if (!data || data.type !== 'FeatureCollection' || !Array.isArray(data.features)) {
+        throw new Error('GeoJSON inválido');
+      }
+
+      terracesGeojson = data;
+      terracesById = new Map();
+
+      for (const feature of data.features) {
+        const id = Number(feature?.properties?.id_terraza);
+        if (Number.isFinite(id)) {
+          terracesById.set(id, feature);
+        }
+      }
+    }
+
+    function populateBarrioSelect() {
+      const barrios = new Set();
+
+      for (const feature of terracesGeojson?.features || []) {
+        const barrio = getBarrio(feature.properties);
+        if (barrio) barrios.add(barrio);
+      }
+
+      const sorted = [...barrios].sort((a, b) => a.localeCompare(b, 'es'));
+
+      barrioSelect.innerHTML = `<option value="">Todo Madrid</option>`;
+      for (const barrio of sorted) {
+        const option = document.createElement('option');
+        option.value = barrio;
+        option.textContent = barrio;
+        barrioSelect.appendChild(option);
+      }
+    }
+
+    async function initDuckDB() {
+      const bundles = duckdb.getJsDelivrBundles();
+      const bundle = await duckdb.selectBundle(bundles);
+
+      if (!bundle) {
+        throw new Error('No se pudo seleccionar un bundle de DuckDB-Wasm');
+      }
+
+      const workerUrl = URL.createObjectURL(
+        new Blob([`importScripts("${bundle.mainWorker}");`], { type: 'text/javascript' })
+      );
+
+      const worker = new Worker(workerUrl);
+      const logger = new duckdb.ConsoleLogger();
+
+      db = new duckdb.AsyncDuckDB(logger, worker);
+      await db.instantiate(bundle.mainModule, bundle.pthreadWorker);
+      URL.revokeObjectURL(workerUrl);
+
+      conn = await db.connect();
+      await conn.query(`SET enable_progress_bar = false;`);
+      await conn.query(`SET threads = 1;`);
+    }
+
+    async function ensureWeekRegistered(dateString) {
+      const alias = buildWeekAlias(dateString);
+      const url = buildWeekUrl(dateString);
+
+      if (registeredWeekAliases.has(alias)) {
+        return alias;
+      }
+
+      await db.registerFileURL(alias, url, duckdb.DuckDBDataProtocol.HTTP, true);
+      registeredWeekAliases.add(alias);
+      return alias;
+    }
+
+    function normalizeShadowPctExpr() {
+      return `CASE
+        WHEN shadow_pct IS NULL THEN NULL
+        WHEN shadow_pct <= 1 THEN LEAST(shadow_pct * 100.0, 100.0)
+        ELSE LEAST(CAST(shadow_pct AS DOUBLE), 100.0)
+      END`;
+    }
+
+    async function loadRanking() {
+      if (!db || !conn || !terracesGeojson) return;
+
+      const weekDate = weekDateInput.value;
+      const barrio = barrioSelect.value;
+      const { start, end } = ensureValidHourRange();
+
+      listScopeChip.textContent = barrio || 'Todo Madrid';
+
+      if (!weekDate) {
+        setStatus('Selecciona una fecha.', true);
+        return;
+      }
+
+      try {
+        setStatus('Calculando ranking semanal…');
+
+        const alias = await ensureWeekRegistered(weekDate);
+        const shadowExpr = normalizeShadowPctExpr();
+
+        const sql = `
+          SELECT
+            terraza_id,
+            COUNT(*) AS n_registros,
+            AVG(${shadowExpr}) AS avg_shadow_pct,
+            MIN(${shadowExpr}) AS min_shadow_pct,
+            MAX(${shadowExpr}) AS max_shadow_pct
+          FROM read_parquet('${alias}')
+          WHERE EXTRACT(HOUR FROM datetime) BETWEEN ${start} AND ${end}
+          GROUP BY terraza_id
+          HAVING COUNT(*) > 0
+          ORDER BY avg_shadow_pct ASC, n_registros DESC
+        `;
+
+        const result = await conn.query(sql);
+        const rows = (result.toArray ? result.toArray() : []).map(r => {
+          if (typeof r.toJSON === 'function') return r.toJSON();
+          return r;
+        });
+
+        const enriched = rows
+          .map(row => {
+            const terraceId = Number(row.terraza_id);
+            const feature = terracesById.get(terraceId);
+            if (!feature) return null;
+
+            const props = feature.properties || {};
+            const avgShadow = toNumberOrNull(row.avg_shadow_pct);
+            const avgSun = avgShadow === null ? null : Math.max(0, 100 - avgShadow);
+
+            return {
+              terraceId,
+              rotulo: String(props.rotulo ?? '').trim() || `Terraza ${terraceId}`,
+              address: buildAddress(props),
+              barrio: getBarrio(props),
+              avgShadowPct: avgShadow,
+              avgSunPct: avgSun,
+              minShadowPct: toNumberOrNull(row.min_shadow_pct),
+              maxShadowPct: toNumberOrNull(row.max_shadow_pct),
+              nRegistros: Number(row.n_registros) || 0
+            };
+          })
+          .filter(Boolean)
+          .filter(item => !barrio || normalizeText(item.barrio) === normalizeText(barrio))
+          .sort((a, b) => {
+            if (a.avgShadowPct === null && b.avgShadowPct === null) return 0;
+            if (a.avgShadowPct === null) return 1;
+            if (b.avgShadowPct === null) return -1;
+            if (a.avgShadowPct !== b.avgShadowPct) return a.avgShadowPct - b.avgShadowPct;
+            return b.nRegistros - a.nRegistros;
+          });
+
+        renderWinner(enriched[0], weekDate, start, end, barrio);
+        renderRanking(enriched.slice(0, 15));
+
+
+      } catch (err) {
+        console.error(err);
+        winnerContainer.innerHTML = `<div class="empty">No se pudo calcular el ranking.</div>`;
+        rankingContainer.innerHTML = '';
+        setStatus('Error calculando el ranking semanal.', true);
+      }
+    }
+
+    function renderWinner(item, weekDate, start, end, barrio) {
+      if (!item) {
+        winnerContainer.innerHTML = `<div class="empty">No hay resultados para esa semana, barrio y rango horario.</div>`;
+        return;
+      }
+
+      winnerContainer.innerHTML = `
+        <div class="winner-card">
+          <div class="winner-top">
+            <div>
+              <div class="winner-kicker">Terraza con más sol de la semana</div>
+              <h3 class="winner-name">${escapeHtml(item.rotulo)}</h3>
+              <div class="winner-address">${escapeHtml(item.address)}</div>
+            </div>
+
+            <div class="winner-score">
+              <div class="winner-score-label">Sol medio</div>
+              <div class="winner-score-value">${escapeHtml(formatPct(item.avgSunPct))}</div>
+              <div class="winner-score-sub">Menos sombra media</div>
+            </div>
+          </div>
+
+          <div class="winner-meta">
+            <div class="meta-box">
+              <div class="meta-label">Sombra media</div>
+              <div class="meta-value">${escapeHtml(formatPct(item.avgShadowPct))}</div>
+            </div>
+
+            <div class="meta-box">
+              <div class="meta-label">Barrio</div>
+              <div class="meta-value">${escapeHtml(item.barrio || '—')}</div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderRanking(items) {
+      if (!items.length) {
+        rankingContainer.innerHTML = `<div class="empty">No hay terrazas para mostrar en este filtro.</div>`;
+        return;
+      }
+
+      rankingContainer.innerHTML = items.map((item, idx) => `
+        <div class="rank-item">
+          <div class="rank-pos">${idx + 1}</div>
+
+          <div class="rank-main">
+            <div class="rank-name">${escapeHtml(item.rotulo)}</div>
+            <div class="rank-address">${escapeHtml(item.address)}</div>
+          </div>
+
+          <div class="rank-score">
+            <div class="rank-score-value">${escapeHtml(formatPct(item.avgSunPct))}</div>
+            <div class="rank-score-label">sol medio</div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function bindEvents() {
+      weekDateInput.addEventListener('change', loadRanking);
+      barrioSelect.addEventListener('change', loadRanking);
+
+      hourStartSelect.addEventListener('change', () => {
+        ensureValidHourRange();
+        loadRanking();
+      });
+
+      hourEndSelect.addEventListener('change', () => {
+        ensureValidHourRange();
+        loadRanking();
+      });
+    }
+
+    async function init() {
+      try {
+        weekDateInput.value = getCurrentDateClamped();
+        initHourSelectors();
+        setStatus('Cargando terrazas y motor de consulta…');
+
+        await loadTerracesGeojson();
+        populateBarrioSelect();
+        await initDuckDB();
+        bindEvents();
+        await loadRanking();
+      } catch (err) {
+        console.error(err);
+        setStatus('No se pudo inicializar la página de ranking.', true);
+      }
+    }
+
+    await init();
+  </script>
+</body>
+</html>
