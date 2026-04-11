@@ -1061,6 +1061,20 @@
         --sheet-full: 0px;
       }
 
+		.fab-btn:hover .fab-tooltip,
+		  .fab-btn:focus-visible .fab-tooltip,
+		  #desktop-green-filter:hover .fab-tooltip,
+		  #desktop-green-filter:focus-visible .fab-tooltip,
+		  #desktop-type-btn:hover .fab-tooltip,
+		  #desktop-type-btn:focus-visible .fab-tooltip {
+			opacity: 1;
+		  }
+	
+		 .fab-btn,
+		  #desktop-green-filter,
+		  #desktop-type-btn {
+			position: relative;
+		  }
       /* ── Left side panel ── */
       #sheet {
         position: fixed;
@@ -1467,7 +1481,7 @@
         <path d="M12 21c0-4.2 1.2-7.2 3.4-9.4 2.3-2.3 5.1-3.3 6.1-3.6.2 1-.1 3.8-2.4 6.1-2 2-4.5 3-7.1 3.2M12 21c0-3.6-.9-6.1-2.7-7.9C7.1 10.9 4.4 10 3.3 9.7c-.2 1 .1 3.6 2.2 5.7 1.8 1.8 4 2.8 6.5 3"
           fill="none" stroke="#166534" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
       </svg>
-      <span class="fab-tooltip">Zonas verdes</span>
+      <span class="fab-tooltip">Terrazas con zonas verdes a 50m</span>
     </button>
 
     <div class="desktop-type-wrap" id="desktop-type-wrap" style="display:none;">
@@ -1884,6 +1898,7 @@
         showStatus('Geolocalización no disponible', true);
         return;
       }
+
       fabLocate.classList.add('locating');
       showStatus('Obteniendo ubicación…', false, true);
 
@@ -1895,11 +1910,31 @@
 
           saveUserLocation(lat, lng);
           showUserLocationMarker(lat, lng);
-          map.flyTo([lat, lng], Math.max(map.getZoom(), 15), { duration: 0.6 });
+
+          const targetZoom = 17;
+
+          map.stop();
+
+          const currentZoom = map.getZoom();
+
+          if (currentZoom >= targetZoom - 0.25) {
+            map.setView([lat, lng], Math.max(14, currentZoom - 1), { animate: false });
+          }
+
+          map.flyTo([lat, lng], targetZoom, {
+            animate: true,
+            duration: 1.2,
+            easeLinearity: 0.2,
+            essential: true
+          });
         },
         (err) => {
           fabLocate.classList.remove('locating');
-          const msgs = { 1: 'Permiso denegado', 2: 'Posición no disponible', 3: 'Tiempo agotado' };
+          const msgs = {
+            1: 'Permiso denegado',
+            2: 'Posición no disponible',
+            3: 'Tiempo agotado'
+          };
           showStatus(msgs[err.code] || 'Error de geolocalización', true);
         },
         { enableHighAccuracy: true, timeout: 10000, maximumAge: 30000 }
