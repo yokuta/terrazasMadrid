@@ -51,6 +51,10 @@
       --sheet-full: 72vh;
 
       --transition: cubic-bezier(0.32, 0.72, 0, 1);
+
+      /* FAB column width on desktop */
+      --fab-col-width: 52px;
+      --fab-col-right: 16px;
     }
 
     * {
@@ -92,6 +96,9 @@
       box-shadow: var(--shadow-sm);
     }
 
+    /* ════════════════════════════════════════
+       SEARCH OVERLAY
+    ════════════════════════════════════════ */
     #search-overlay {
       position: fixed;
       top: 0;
@@ -193,6 +200,7 @@
       display: none;
       overscroll-behavior: contain;
       backdrop-filter: blur(10px);
+      z-index: 500;
     }
 
     #autocompleteList.open {
@@ -209,9 +217,7 @@
       transition: background 0.12s;
     }
 
-    .ac-item:last-child {
-      border-bottom: none;
-    }
+    .ac-item:last-child { border-bottom: none; }
 
     .ac-item:hover,
     .ac-item.active {
@@ -231,10 +237,7 @@
       box-shadow: inset 0 1px 0 rgba(255,255,255,0.18);
     }
 
-    .ac-text {
-      flex: 1;
-      min-width: 0;
-    }
+    .ac-text { flex: 1; min-width: 0; }
 
     .ac-title {
       font-size: 13px;
@@ -252,6 +255,9 @@
       margin-top: 1px;
     }
 
+    /* ════════════════════════════════════════
+       BOTTOM SHEET
+    ════════════════════════════════════════ */
     #sheet {
       position: fixed;
       left: 0;
@@ -285,9 +291,7 @@
       user-select: none;
     }
 
-    #sheet-handle-area:active {
-      cursor: grabbing;
-    }
+    #sheet-handle-area:active { cursor: grabbing; }
 
     .handle-pill {
       width: 36px;
@@ -327,13 +331,9 @@
       box-shadow: var(--shadow-sm);
     }
 
-    #sheet-close:hover {
-      background: #d6e7f7;
-    }
+    #sheet-close:hover { background: #d6e7f7; }
 
-    #place-header {
-      display: none;
-    }
+    #place-header { display: none; }
 
     #place-name {
       font-family: var(--font-display);
@@ -404,9 +404,7 @@
       opacity: 1;
     }
 
-    .shadow-info {
-      flex: 1;
-    }
+    .shadow-info { flex: 1; }
 
     .shadow-info .info-label {
       font-size: 10px;
@@ -432,9 +430,7 @@
       margin-top: 4px;
     }
 
-    .ctrl-section {
-      margin-bottom: 12px;
-    }
+    .ctrl-section { margin-bottom: 12px; }
 
     .ctrl-label {
       font-size: 10px;
@@ -531,9 +527,7 @@
       cursor: grab;
     }
 
-    input[type=range]::-webkit-slider-thumb:active {
-      cursor: grabbing;
-    }
+    input[type=range]::-webkit-slider-thumb:active { cursor: grabbing; }
 
     input[type=range]::-moz-range-thumb {
       width: 20px;
@@ -578,9 +572,7 @@
       margin-right: 6px;
     }
 
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
+    @keyframes spin { to { transform: rotate(360deg); } }
 
     #no-result {
       display: none;
@@ -593,13 +585,9 @@
     #no-result svg { margin-bottom: 8px; }
     #no-result p { font-size: 13px; }
 
-    .hidden {
-      display: none !important;
-    }
+    .hidden { display: none !important; }
 
-    .terrace-info-section {
-      margin-top: 6px;
-    }
+    .terrace-info-section { margin-top: 6px; }
 
     .terrace-info-card {
       background: var(--panel-2);
@@ -652,10 +640,7 @@
       color: var(--text);
     }
 
-    .terrace-info-list {
-      display: grid;
-      gap: 8px;
-    }
+    .terrace-info-list { display: grid; gap: 8px; }
 
     .terrace-info-item {
       background: #fff;
@@ -667,9 +652,7 @@
       line-height: 1.4;
     }
 
-    .terrace-info-item .info-pill-label {
-      margin-bottom: 4px;
-    }
+    .terrace-info-item .info-pill-label { margin-bottom: 4px; }
 
     .terrace-info-item .info-pill-value {
       font-size: 14px;
@@ -690,55 +673,9 @@
       transform: scale(1.1);
     }
 
-    /* ── Floating action buttons ── */
-    #ranking-link,
-    #locate-btn,
-    #info-link {
-      position: absolute;
-      right: 4px;
-      width: 42px;
-      height: 42px;
-      border-radius: 50%;
-      background: rgba(255,255,255,0.96);
-      border: 1px solid var(--border-2);
-      box-shadow: var(--shadow-md);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-decoration: none;
-      z-index: 410;
-      backdrop-filter: blur(10px);
-      cursor: pointer;
-      transition: transform 0.18s, box-shadow 0.18s;
-    }
-
-    #ranking-link { top: 54px; }
-    #locate-btn   { top: 102px; }
-    #info-link    { top: 150px; }
-
-    #ranking-link:hover,
-    #locate-btn:hover,
-    #info-link:hover {
-      transform: translateY(-1px);
-      box-shadow: var(--shadow-lg);
-    }
-
-    #locate-btn {
-      border: none;
-      padding: 0;
-    }
-
-    #locate-btn.locating {
-      animation: locatePulse 1s ease-in-out infinite alternate;
-    }
-
-    @keyframes locatePulse {
-      from { box-shadow: var(--shadow-md); }
-      to   { box-shadow: 0 0 0 4px rgba(0,94,168,0.18), var(--shadow-md); }
-    }
-
-  
-
+    /* ════════════════════════════════════════
+       SHADOW LEGEND
+    ════════════════════════════════════════ */
     #shadow-legend {
       position: fixed;
       left: 12px;
@@ -818,39 +755,100 @@
       border-radius: 2px;
     }
 
-    /* ───────────────────────────────────────────
-       MOBILE-ONLY FILTER BAR
-    ─────────────────────────────────────────── */
+    /* ════════════════════════════════════════
+       USER LOCATION MARKER (improved)
+    ════════════════════════════════════════ */
+    .user-loc-pulse {
+      position: relative;
+      width: 16px;
+      height: 16px;
+    }
+
+    @keyframes locPulse {
+      0%   { transform: scale(1);   opacity: 0.55; }
+      100% { transform: scale(2.6); opacity: 0; }
+    }
+
+    /* ════════════════════════════════════════
+       MOBILE LAYOUT  (< 720px)
+    ════════════════════════════════════════ */
     @media (max-width: 719px) {
       #desktop-label,
       #place-divider {
         display: none !important;
       }
 
-      .terrace-info-grid {
-        grid-template-columns: 1fr 1fr;
-      }
-
+      /* ── Section A: Horizontal scroll filter bar ── */
       #mobile-filters-bar {
 		  display: flex;
 		  align-items: center;
 		  gap: 8px;
-		  justify-content: flex-start;
-		  margin-top: 10px;
-		  padding-right: 56px;
+		  margin-top: 8px;
+		  padding-right: 62px;
+		  overflow-x: auto;
+		  overflow-y: visible;
+		  -webkit-overflow-scrolling: touch;
+		  scroll-behavior: smooth;
 		  pointer-events: all;
-		  overflow: visible;
+		  scrollbar-width: none;
+		  -ms-overflow-style: none;
+		  flex-wrap: nowrap;
 		  position: relative;
-		  z-index: 420;
+		  z-index: 430;
 		}
 
-      /* ── Green filter chip (unchanged) ── */
+      #mobile-filters-bar::-webkit-scrollbar { display: none; }
+
+      /* ── Section B: FAB column — fixed right side ── */
+      #fab-column {
+		  display: flex;
+		  flex-direction: column;
+		  gap: 8px;
+		  position: fixed;
+		  right: 10px;
+		  top: 64px;
+		  z-index: 420;
+		  pointer-events: all;
+		}
+
+      .fab-btn {
+        width: 42px;
+        height: 42px;
+        border-radius: 50%;
+        background: rgba(255,255,255,0.96);
+        border: 1px solid var(--border-2);
+        box-shadow: var(--shadow-md);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-decoration: none;
+        backdrop-filter: blur(10px);
+        cursor: pointer;
+        transition: transform 0.18s, box-shadow 0.18s;
+        flex-shrink: 0;
+      }
+
+      .fab-btn:hover {
+        transform: translateY(-1px);
+        box-shadow: var(--shadow-lg);
+      }
+
+      .fab-btn.locating {
+        animation: locatePulse 1s ease-in-out infinite alternate;
+      }
+
+      @keyframes locatePulse {
+        from { box-shadow: var(--shadow-md); }
+        to   { box-shadow: 0 0 0 4px rgba(0,94,168,0.18), var(--shadow-md); }
+      }
+
+      /* ── Filter chips ── */
       .filter-chip {
         display: inline-flex;
         align-items: center;
         justify-content: center;
         gap: 7px;
-        height: 42px;
+        height: 38px;
         flex-shrink: 0;
         padding: 0 14px;
         border-radius: 999px;
@@ -867,9 +865,7 @@
         transition: transform 0.15s, background 0.15s, border-color 0.15s, color 0.15s;
       }
 
-      .filter-chip:active {
-        transform: scale(0.98);
-      }
+      .filter-chip:active { transform: scale(0.98); }
 
       .filter-chip.is-active {
         background: linear-gradient(135deg, #e7f5ea, #f7fbf8);
@@ -879,17 +875,17 @@
 
       /* ── Type selector wrapper ── */
       .type-filter-wrap {
-        position: relative;
-        flex-shrink: 0;
-      }
+		  position: relative;
+		  flex-shrink: 0;
+		  overflow: visible;
+		}
 
-      /* Custom pill trigger button */
       #type-filter-btn {
         display: inline-flex;
         align-items: center;
         gap: 7px;
-        height: 42px;
-        padding: 0 14px 0 14px;
+        height: 38px;
+        padding: 0 14px;
         border-radius: 999px;
         border: 1px solid var(--border-2);
         background: rgba(255,255,255,0.97);
@@ -906,9 +902,7 @@
         user-select: none;
       }
 
-      #type-filter-btn:active {
-        transform: scale(0.98);
-      }
+      #type-filter-btn:active { transform: scale(0.98); }
 
       #type-filter-btn.has-value {
         background: linear-gradient(135deg, #eef6ff, #f8fbff);
@@ -945,27 +939,36 @@
         transform: rotate(180deg);
       }
 
-      /* Dropdown panel */
-      #type-filter-dropdown {
-        position: absolute;
-        top: calc(100% + 8px);
-        left: 0;
-        min-width: 180px;
-        background: rgba(255,255,255,0.98);
-        border: 1px solid var(--border-2);
-        border-radius: var(--radius-md);
-        box-shadow: var(--shadow-lg);
-        backdrop-filter: blur(14px);
-        overflow: hidden;
-        z-index: 500;
-        display: none;
-        transform-origin: top left;
-        animation: dropIn 0.18s var(--transition);
-      }
+      #mobile-type-dropdown-portal {
+		  position: absolute;
+		  left: 0;
+		  right: 0;
+		  top: 0;
+		  z-index: 460;
+		  pointer-events: none;
+		}
 
-      #type-filter-dropdown.open {
-        display: block;
-      }
+		#type-filter-dropdown {
+		  position: absolute;
+		  min-width: 180px;
+		  background: rgba(255,255,255,0.98);
+		  border: 1px solid var(--border-2);
+		  border-radius: var(--radius-md);
+		  box-shadow: var(--shadow-lg);
+		  backdrop-filter: blur(14px);
+		  overflow: hidden;
+		  z-index: 9999;
+		  display: none;
+		  transform-origin: top left;
+		  animation: dropIn 0.18s var(--transition);
+		  pointer-events: auto;
+		}
+
+		#type-filter-dropdown.open {
+		  display: block;
+		}
+
+      #type-filter-dropdown.open { display: block; }
 
       @keyframes dropIn {
         from { opacity: 0; transform: scale(0.96) translateY(-4px); }
@@ -987,14 +990,10 @@
         -webkit-tap-highlight-color: transparent;
       }
 
-      .type-option:last-child {
-        border-bottom: none;
-      }
+      .type-option:last-child { border-bottom: none; }
 
       .type-option:hover,
-      .type-option.active {
-        background: rgba(0,94,168,0.06);
-      }
+      .type-option.active { background: rgba(0,94,168,0.06); }
 
       .type-option.selected {
         color: var(--brand-dark);
@@ -1010,18 +1009,51 @@
         transition: opacity 0.15s;
       }
 
-      .type-option.selected .type-option-check {
-        opacity: 1;
-      }
+      .type-option.selected .type-option-check { opacity: 1; }
 
       .type-option-icon {
         font-size: 15px;
         flex-shrink: 0;
         line-height: 1;
       }
+
+      /* ── Export button ── */
+      #export-loc-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        height: 38px;
+        flex-shrink: 0;
+        padding: 0 14px;
+        border-radius: 999px;
+        border: 1px solid var(--border-2);
+        background: rgba(255,255,255,0.97);
+        color: var(--brand-dark);
+        font-family: var(--font-body);
+        font-size: 13px;
+        font-weight: 600;
+        white-space: nowrap;
+        box-shadow: var(--shadow-md);
+        backdrop-filter: blur(10px);
+        cursor: pointer;
+        transition: transform 0.15s, background 0.15s;
+        display: none;
+      }
+
+      #export-loc-btn.visible {
+        display: inline-flex;
+      }
+
+      #export-loc-btn:active { transform: scale(0.98); }
+
+      /* On mobile, hide old-style individual FABs — now in #fab-column */
+      #ranking-link, #locate-btn, #info-link { display: none !important; }
     }
 
-    /* ── DESKTOP ── */
+    /* ════════════════════════════════════════
+       DESKTOP LAYOUT  (>= 720px)
+    ════════════════════════════════════════ */
     @media (min-width: 720px) {
       :root {
         --sheet-peek: 0px;
@@ -1029,6 +1061,7 @@
         --sheet-full: 0px;
       }
 
+      /* ── Left side panel ── */
       #sheet {
         position: fixed;
         left: 16px;
@@ -1055,6 +1088,7 @@
         padding: 44px 20px 24px;
       }
 
+      /* ── Search overlays on left ── */
       #search-overlay {
         left: 16px;
         right: auto;
@@ -1064,11 +1098,7 @@
 
       #search-wrap { max-width: none; }
 
-      #status-pill {
-        bottom: 28px;
-        left: 50%;
-      }
-
+      /* Show place header on desktop */
       #place-header {
         display: flex;
         align-items: flex-start;
@@ -1077,20 +1107,259 @@
         margin-bottom: 12px;
       }
 
-      #info-link {
-        display: none;
+      #status-pill {
+        bottom: 28px;
+        left: 50%;
       }
 
-      #shadow-legend {
-        display: none;
+      /* ── Desktop FAB column (right side) ── */
+      #fab-column {
+		  position: fixed;
+		  right: 16px;
+		  top: 88px;
+		  z-index: 420;
+		  display: flex;
+		  flex-direction: column;
+		  align-items: center;
+		  gap: 8px;
+		  pointer-events: all;
+		}
+
+      .fab-btn {
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        background: rgba(255,255,255,0.96);
+        border: 1px solid var(--border-2);
+        box-shadow: var(--shadow-md);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-decoration: none;
+        backdrop-filter: blur(10px);
+        cursor: pointer;
+        transition: transform 0.18s, box-shadow 0.18s;
+        flex-shrink: 0;
       }
+
+      .fab-btn:hover {
+        transform: translateY(-1px);
+        box-shadow: var(--shadow-lg);
+      }
+
+      .fab-btn.locating {
+        animation: locatePulse 1s ease-in-out infinite alternate;
+      }
+
+      @keyframes locatePulse {
+        from { box-shadow: var(--shadow-md); }
+        to   { box-shadow: 0 0 0 4px rgba(0,94,168,0.18), var(--shadow-md); }
+      }
+
+      /* ── Desktop filter pills (in FAB column below divider) ── */
+      #desktop-filter-section {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
+        width: 44px;
+      }
+
+      #desktop-fab-divider {
+        height: 1px;
+        background: var(--border);
+        margin: 4px 0;
+      }
+
+      /* Desktop green filter — icon-only pill */
+      #desktop-green-filter {
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        border: 1px solid var(--border-2);
+        background: rgba(255,255,255,0.96);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        box-shadow: var(--shadow-md);
+        backdrop-filter: blur(10px);
+        transition: transform 0.15s, background 0.15s, border-color 0.15s;
+        flex-shrink: 0;
+      }
+
+      #desktop-green-filter:hover {
+        transform: translateY(-1px);
+        box-shadow: var(--shadow-lg);
+      }
+
+      #desktop-green-filter.is-active {
+        background: linear-gradient(135deg, #e7f5ea, #f7fbf8);
+        border-color: rgba(34, 197, 94, 0.4);
+      }
+
+      /* Desktop type filter — icon-only pill with tooltip */
+      .desktop-type-wrap {
+        position: relative;
+        width: 44px;
+      }
+
+      #desktop-type-btn {
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        border: 1px solid var(--border-2);
+        background: rgba(255,255,255,0.96);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        box-shadow: var(--shadow-md);
+        backdrop-filter: blur(10px);
+        transition: transform 0.15s, background 0.15s, border-color 0.15s;
+        flex-shrink: 0;
+        font-size: 17px;
+        outline: none;
+      }
+
+      #desktop-type-btn:hover {
+        transform: translateY(-1px);
+        box-shadow: var(--shadow-lg);
+      }
+
+      #desktop-type-btn.has-value {
+        background: linear-gradient(135deg, #eef6ff, #f8fbff);
+        border-color: rgba(10,116,201,0.35);
+      }
+
+      #desktop-type-dropdown {
+        position: absolute;
+        top: 0;
+        right: calc(100% + 10px);
+        min-width: 190px;
+        background: rgba(255,255,255,0.98);
+        border: 1px solid var(--border-2);
+        border-radius: var(--radius-md);
+        box-shadow: var(--shadow-lg);
+        backdrop-filter: blur(14px);
+        overflow: hidden;
+        z-index: 500;
+        display: none;
+        animation: dropInLeft 0.18s var(--transition);
+        transform-origin: top right;
+      }
+
+      #desktop-type-dropdown.open { display: block; }
+
+      @keyframes dropInLeft {
+        from { opacity: 0; transform: scale(0.96) translateX(4px); }
+        to   { opacity: 1; transform: scale(1)    translateX(0); }
+      }
+
+      
+
+      /* ── Shared type option styles (both mobile + desktop dropdowns) ── */
+      .type-option {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 11px 16px;
+        font-family: var(--font-body);
+        font-size: 13px;
+        font-weight: 500;
+        color: var(--text);
+        cursor: pointer;
+        border-bottom: 1px solid rgba(22,32,43,0.05);
+        transition: background 0.12s;
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      .type-option:last-child { border-bottom: none; }
+
+      .type-option:hover,
+      .type-option.active { background: rgba(0,94,168,0.06); }
+
+      .type-option.selected {
+        color: var(--brand-dark);
+        font-weight: 700;
+      }
+
+      .type-option-check {
+        width: 16px;
+        height: 16px;
+        flex-shrink: 0;
+        color: var(--brand);
+        opacity: 0;
+        transition: opacity 0.15s;
+      }
+
+      .type-option.selected .type-option-check { opacity: 1; }
+
+      .type-option-icon {
+        font-size: 15px;
+        flex-shrink: 0;
+        line-height: 1;
+      }
+
+      /* Hide mobile-only elements on desktop */
+      #mobile-filters-bar { display: none !important; }
+      #ranking-link, #locate-btn, #info-link { display: none !important; }
+      #shadow-legend { display: none; }
+
+      #desktop-label { display: block !important; }
     }
+
+    /* ── Shared type option styles for mobile too ── */
+    @media (max-width: 719px) {
+      .type-option {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 11px 16px;
+        font-family: var(--font-body);
+        font-size: 13px;
+        font-weight: 500;
+        color: var(--text);
+        cursor: pointer;
+        border-bottom: 1px solid rgba(22,32,43,0.05);
+        transition: background 0.12s;
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      .type-option:last-child { border-bottom: none; }
+      .type-option:hover, .type-option.active { background: rgba(0,94,168,0.06); }
+      .type-option.selected { color: var(--brand-dark); font-weight: 700; }
+      .type-option-check { width: 16px; height: 16px; flex-shrink: 0; color: var(--brand); opacity: 0; transition: opacity 0.15s; }
+      .type-option.selected .type-option-check { opacity: 1; }
+      .type-option-icon { font-size: 15px; flex-shrink: 0; line-height: 1; }
+    }
+
+    /* ── FAB tooltip ── */
+    .fab-tooltip {
+      position: absolute;
+      right: calc(100% + 10px);
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(15,36,61,0.88);
+      color: white;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 5px 10px;
+      border-radius: 8px;
+      white-space: nowrap;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.15s;
+      backdrop-filter: blur(4px);
+    }
+  
   </style>
 </head>
 <body>
 
   <div id="map"></div>
 
+  <!-- ══ SEARCH OVERLAY ══ -->
   <div id="search-overlay">
     <div id="search-wrap">
       <div id="search-bar">
@@ -1103,81 +1372,116 @@
 
       <div id="autocompleteList" role="listbox"></div>
 
-      <!-- Mobile filters bar -->
-      <div id="mobile-filters-bar">
+      <!-- ── SECTION A: Horizontal scroll filter bar (mobile only) ── -->
+      <div id="mobile-filters-bar" aria-label="Filtros">
 
-        <!-- Green areas chip (unchanged) -->
         <button
           id="green-filter-toggle"
           type="button"
           class="filter-chip"
           aria-pressed="false"
           aria-label="Filtrar terrazas con zonas verdes cercanas"
-          title="Mostrar solo terrazas con zona verde cercana"
         >
-          <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
-            <path
-              d="M12 21c0-4.2 1.2-7.2 3.4-9.4 2.3-2.3 5.1-3.3 6.1-3.6.2 1-.1 3.8-2.4 6.1-2 2-4.5 3-7.1 3.2M12 21c0-3.6-.9-6.1-2.7-7.9C7.1 10.9 4.4 10 3.3 9.7c-.2 1 .1 3.6 2.2 5.7 1.8 1.8 4 2.8 6.5 3"
-              fill="none" stroke="currentColor" stroke-width="1.8"
-              stroke-linecap="round" stroke-linejoin="round"
-            />
+          <svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true">
+            <path d="M12 21c0-4.2 1.2-7.2 3.4-9.4 2.3-2.3 5.1-3.3 6.1-3.6.2 1-.1 3.8-2.4 6.1-2 2-4.5 3-7.1 3.2M12 21c0-3.6-.9-6.1-2.7-7.9C7.1 10.9 4.4 10 3.3 9.7c-.2 1 .1 3.6 2.2 5.7 1.8 1.8 4 2.8 6.5 3"
+              fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
-          <span>Zonas verdes a 50m</span>
+          <span>Zonas verdes</span>
         </button>
 
-        <!-- Custom type selector -->
         <div class="type-filter-wrap">
-          <button
-            id="type-filter-btn"
-            type="button"
-            aria-haspopup="listbox"
-            aria-expanded="false"
-            aria-label="Filtrar por tipo de local"
-          >
-            <span class="type-btn-prefix">Tipo</span>
-            <span class="type-btn-label" id="type-btn-label-text">Todos</span>
-            <svg class="type-btn-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <polyline points="6 9 12 15 18 9"/>
-            </svg>
-          </button>
+			<button
+			  id="type-filter-btn"
+			  type="button"
+			  aria-haspopup="listbox"
+			  aria-expanded="false"
+			  aria-label="Filtrar por tipo de local"
+			>
+			  <span class="type-btn-prefix">Tipo</span>
+			  <span class="type-btn-label" id="type-btn-label-text">Todos</span>
+			  <svg class="type-btn-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+				<polyline points="6 9 12 15 18 9"/>
+			  </svg>
+			</button>
+		  </div>
 
-          <div id="type-filter-dropdown" role="listbox" aria-label="Tipo de local">
-            <!-- Options injected by JS -->
-          </div>
-        </div>
+		</div>
 
+		<div id="mobile-type-dropdown-portal"></div>
+
+
+
+     
       </div>
-
-      <!-- Floating circular buttons -->
-      <a id="ranking-link" href="./ranking.html" aria-label="Ir al ranking de terrazas">
-        <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">
-          <rect x="3" y="11" width="4" height="8" rx="1.5" fill="#22c55e"/>
-          <rect x="10" y="7" width="4" height="12" rx="1.5" fill="#8b5cf6"/>
-          <rect x="17" y="4" width="4" height="15" rx="1.5" fill="#06b6d4"/>
-        </svg>
-      </a>
-
-      <button id="locate-btn" type="button" aria-label="Centrar mapa en mi ubicación">
-        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#0f3d68" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <circle cx="12" cy="12" r="3"/>
-          <line x1="12" y1="2" x2="12" y2="5"/>
-          <line x1="12" y1="19" x2="12" y2="22"/>
-          <line x1="2"  y1="12" x2="5"  y2="12"/>
-          <line x1="19" y1="12" x2="22" y2="12"/>
-          <circle cx="12" cy="12" r="7" stroke-opacity="0.3"/>
-        </svg>
-      </button>
-
-      <a id="info-link" href="./Infoterrazas.html" aria-label="Ir a información adicional">
-        <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
-          <circle cx="12" cy="12" r="9" fill="none" stroke="#0f3d68" stroke-width="2"/>
-          <line x1="12" y1="10" x2="12" y2="16" stroke="#0f3d68" stroke-width="2" stroke-linecap="round"/>
-          <circle cx="12" cy="7" r="1.2" fill="#0f3d68"/>
-        </svg>
-      </a>
     </div>
   </div>
 
+  <!-- ══ SECTION B: FAB column (both mobile + desktop, positioned via CSS) ══ -->
+  <div id="fab-column" aria-label="Acciones del mapa">
+    <a id="fab-ranking" class="fab-btn" href="./ranking.html" aria-label="Ir al ranking de terrazas">
+      <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+        <rect x="3" y="11" width="4" height="8" rx="1.5" fill="#22c55e"/>
+        <rect x="10" y="7" width="4" height="12" rx="1.5" fill="#8b5cf6"/>
+        <rect x="17" y="4" width="4" height="15" rx="1.5" fill="#06b6d4"/>
+      </svg>
+      <span class="fab-tooltip">Ranking</span>
+    </a>
+
+    <button id="fab-locate" class="fab-btn" type="button" aria-label="Centrar mapa en mi ubicación">
+      <svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="#0f3d68" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <circle cx="12" cy="12" r="3"/>
+        <line x1="12" y1="2" x2="12" y2="5"/>
+        <line x1="12" y1="19" x2="12" y2="22"/>
+        <line x1="2"  y1="12" x2="5"  y2="12"/>
+        <line x1="19" y1="12" x2="22" y2="12"/>
+        <circle cx="12" cy="12" r="7" stroke-opacity="0.3"/>
+      </svg>
+      <span class="fab-tooltip">Mi ubicación</span>
+    </button>
+
+    <a id="fab-info" class="fab-btn" href="./Infoterrazas.html" aria-label="Ir a información adicional">
+      <svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true">
+        <circle cx="12" cy="12" r="9" fill="none" stroke="#0f3d68" stroke-width="2"/>
+        <line x1="12" y1="10" x2="12" y2="16" stroke="#0f3d68" stroke-width="2" stroke-linecap="round"/>
+        <circle cx="12" cy="7" r="1.2" fill="#0f3d68"/>
+      </svg>
+      <span class="fab-tooltip">Info</span>
+    </a>
+
+    <!-- Desktop-only: divider + filters -->
+    <div id="desktop-fab-divider" style="display:none;"></div>
+
+    <button
+      id="desktop-green-filter"
+      type="button"
+      style="display:none;"
+      aria-pressed="false"
+      aria-label="Filtrar terrazas con zonas verdes cercanas"
+    >
+      <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+        <path d="M12 21c0-4.2 1.2-7.2 3.4-9.4 2.3-2.3 5.1-3.3 6.1-3.6.2 1-.1 3.8-2.4 6.1-2 2-4.5 3-7.1 3.2M12 21c0-3.6-.9-6.1-2.7-7.9C7.1 10.9 4.4 10 3.3 9.7c-.2 1 .1 3.6 2.2 5.7 1.8 1.8 4 2.8 6.5 3"
+          fill="none" stroke="#166534" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <span class="fab-tooltip">Zonas verdes</span>
+    </button>
+
+    <div class="desktop-type-wrap" id="desktop-type-wrap" style="display:none;">
+      <button
+        id="desktop-type-btn"
+        type="button"
+        aria-haspopup="listbox"
+        aria-expanded="false"
+        aria-label="Filtrar por tipo de local"
+      >
+        🗂️
+        <span class="fab-tooltip">Tipo de local</span>
+      </button>
+      <div id="desktop-type-dropdown" role="listbox" aria-label="Tipo de local"></div>
+    </div>
+
+  </div>
+
+  <!-- ══ BOTTOM SHEET ══ -->
   <div id="sheet" data-state="peek" role="complementary" aria-label="Información de terraza">
     <div id="sheet-handle-area" aria-hidden="true">
       <div class="handle-pill"></div>
@@ -1269,82 +1573,94 @@
     import wkx from 'https://esm.sh/wkx';
     import { Buffer } from 'https://esm.sh/buffer';
 
+    /* ── Constants ── */
     const BUCKET_BASE_URL = 'https://pub-048f4919d8bc472898a82c1bca238348.r2.dev/weekly_parquet';
     const FILE_YEAR_IN_BUCKET = 2025;
     const FILE_BASENAME = 'terrace_shadows';
     const FILE_SUFFIX = '.parquet';
     const ROTULOS_JSON_URL = './rotulos_terrazas_index.json';
     const TERRACES_GEOJSON_URL = './terrazas.geojson';
-
     const MIN_DATE = '2026-01-01';
     const MAX_DATE = '2026-12-31';
-
     const SOURCE_EPSG = 'EPSG:25830';
     const TARGET_EPSG = 'EPSG:4326';
     const RING_CIRCUMFERENCE = 2 * Math.PI * 28;
-
-    const MADRID_BOUNDS = L.latLngBounds(
-      [40.312, -3.888],
-      [40.643, -3.517]
-    );
-
+    const MADRID_BOUNDS = L.latLngBounds([40.312, -3.888], [40.643, -3.517]);
     const MAP_MIN_ZOOM = 10;
     const MAP_MAX_ZOOM = 19;
     const FIT_BOUNDS_MAX_ZOOM = 19;
+    const USER_LOC_STORAGE_KEY = 'visor_user_location';
 
-    let db = null;
-    let conn = null;
+    /* ── State ── */
+    let db = null, conn = null;
     let currentLayer = null;
     let currentDayFeatures = [];
     let autoLoadTimeout = null;
-
     let rotulosCatalog = [];
     let currentSuggestions = [];
     let selectedSuggIdx = -1;
     let selectedTerraceId = null;
     let selectedRotulo = null;
-
     let terracesGeojson = null;
     let terracesLayer = null;
     let selectedTerraceFeature = null;
-
     let greenFilterActive = false;
     let shadowByTerraceId = new Map();
     let activityTypeFilter = '';
-
     const registeredWeekAliases = new Set();
+    let userLocationData = null;
+    let userLocationMarker = null;
+    let userLocationHalo = null;
 
-    const searchInput = document.getElementById('rotuloSearchInput');
-    const searchClear = document.getElementById('search-clear');
-    const acList = document.getElementById('autocompleteList');
-    const dateInput = document.getElementById('dateInput');
-    const hourSlider = document.getElementById('hourSlider');
-    const hourBadge = document.getElementById('hourBadge');
-    const statusPill = document.getElementById('status-pill');
-    const sheet = document.getElementById('sheet');
-    const placeName = document.getElementById('place-name');
-    const shadowPctVal = document.getElementById('shadow-pct-value');
+    /* ── DOM References ── */
+    const searchInput    = document.getElementById('rotuloSearchInput');
+    const searchClear    = document.getElementById('search-clear');
+    const acList         = document.getElementById('autocompleteList');
+    const dateInput      = document.getElementById('dateInput');
+    const hourSlider     = document.getElementById('hourSlider');
+    const hourBadge      = document.getElementById('hourBadge');
+    const statusPill     = document.getElementById('status-pill');
+    const sheet          = document.getElementById('sheet');
+    const placeName      = document.getElementById('place-name');
+    const shadowPctVal   = document.getElementById('shadow-pct-value');
     const shadowTimeNote = document.getElementById('shadow-time-note');
-    const ringFill = document.getElementById('ring-fill');
-    const ringLabelText = document.getElementById('ring-label-text');
-    const noResult = document.getElementById('no-result');
-    const desktopLabel = document.getElementById('desktop-label');
-    const sheetClose = document.getElementById('sheet-close');
-    const handleArea = document.getElementById('sheet-handle-area');
-
+    const ringFill       = document.getElementById('ring-fill');
+    const ringLabelText  = document.getElementById('ring-label-text');
+    const noResult       = document.getElementById('no-result');
+    const desktopLabel   = document.getElementById('desktop-label');
+    const sheetClose     = document.getElementById('sheet-close');
+    const handleArea     = document.getElementById('sheet-handle-area');
     const terraceInfoSection = document.getElementById('terrace-info-section');
-    const terraceInfoCard = document.getElementById('terrace-info-card');
-    const greenFilterToggle = document.getElementById('green-filter-toggle');
-    const shadowLegend = document.getElementById('shadow-legend');
+    const terraceInfoCard    = document.getElementById('terrace-info-card');
+    const shadowLegend   = document.getElementById('shadow-legend');
 
-    /* ── Custom type filter elements ── */
+	const searchWrap = document.getElementById('search-wrap');
+
+    /* Mobile filter elements */
+    const greenFilterToggle  = document.getElementById('green-filter-toggle');
     const typeFilterBtn      = document.getElementById('type-filter-btn');
-    const typeFilterDropdown = document.getElementById('type-filter-dropdown');
+    const mobileTypeDropdownPortal = document.getElementById('mobile-type-dropdown-portal');
+	const typeFilterDropdown = document.createElement('div');
+	typeFilterDropdown.id = 'type-filter-dropdown';
+	typeFilterDropdown.setAttribute('role', 'listbox');
+	typeFilterDropdown.setAttribute('aria-label', 'Tipo de local');
+	mobileTypeDropdownPortal.appendChild(typeFilterDropdown);
     const typeBtnLabelText   = document.getElementById('type-btn-label-text');
+    
 
-    /* ── Geolocation button ── */
-    const locateBtn = document.getElementById('locate-btn');
+    /* FAB elements (shared column) */
+    const fabLocate  = document.getElementById('fab-locate');
+    const fabRanking = document.getElementById('fab-ranking');
 
+    /* Desktop filter elements */
+    const desktopGreenFilter   = document.getElementById('desktop-green-filter');
+    const desktopFabDivider    = document.getElementById('desktop-fab-divider');
+    const desktopTypeWrap      = document.getElementById('desktop-type-wrap');
+    const desktopTypeBtn       = document.getElementById('desktop-type-btn');
+    const desktopTypeDropdown  = document.getElementById('desktop-type-dropdown');
+    
+
+    /* ── Map setup ── */
     const map = L.map('map', {
       center: [40.4168, -3.7038],
       zoom: isMobileLayout() ? 12 : 11,
@@ -1368,57 +1684,38 @@
       maxZoom: isMobileLayout() ? 12 : 11
     });
 
-    proj4.defs(
-      SOURCE_EPSG,
-      '+proj=utm +zone=30 +ellps=GRS80 +units=m +no_defs +type=crs'
-    );
-    proj4.defs(
-      TARGET_EPSG,
-      '+proj=longlat +datum=WGS84 +no_defs +type=crs'
-    );
+    proj4.defs(SOURCE_EPSG, '+proj=utm +zone=30 +ellps=GRS80 +units=m +no_defs +type=crs');
+    proj4.defs(TARGET_EPSG, '+proj=longlat +datum=WGS84 +no_defs +type=crs');
 
+    /* ════════════════════════════════════════
+       SHEET DRAG
+    ════════════════════════════════════════ */
     let sheetState = 'peek';
-    let dragStartY = 0;
-    let dragStartState = 'peek';
-    let isDragging = false;
-    let dragDelta = 0;
+    let dragStartY = 0, dragStartState = 'peek', isDragging = false, dragDelta = 0;
 
     const peekH = () => parseInt(getComputedStyle(document.documentElement).getPropertyValue('--sheet-peek')) || 116;
-    const midH = () => window.innerHeight * 0.34;
+    const midH  = () => window.innerHeight * 0.34;
     const fullH = () => window.innerHeight * 0.72;
 
-    function isMobileLayout() {
-      return window.innerWidth < 720;
-    }
+    function isMobileLayout() { return window.innerWidth < 720; }
 
     function normalizeText(text) {
-      return String(text ?? '')
-        .normalize('NFD')
-        .replace(/[\u0300-\u036f]/g, '')
-        .toLowerCase()
-        .trim()
-        .replace(/\s+/g, ' ');
+      return String(text ?? '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim().replace(/\s+/g, ' ');
     }
 
     function normalizeActivityType(value) {
       const txt = normalizeText(value);
-      if (!txt) return '';
-      if (txt === 'sin clasificar' || txt === 'no hosteleria') return '';
+      if (!txt || txt === 'sin clasificar' || txt === 'no hosteleria') return '';
       return txt;
     }
 
     function matchesActivityType(feature, selectedType) {
-	  if (!selectedType) return true;
-
-	  const activity = normalizeActivityType(feature?.properties?.tipo_actividad);
-	  const meta = TYPE_OPTION_META[selectedType];
-
-	  if (!meta || !Array.isArray(meta.match) || !meta.match.length) {
-		return true;
-	  }
-
-	  return meta.match.some(m => activity.includes(m));
-	}
+      if (!selectedType) return true;
+      const activity = normalizeActivityType(feature?.properties?.tipo_actividad);
+      const meta = TYPE_OPTION_META[selectedType];
+      if (!meta || !Array.isArray(meta.match) || !meta.match.length) return true;
+      return meta.match.some(m => activity.includes(m));
+    }
 
     function updateLegendVisibility() {
       if (!shadowLegend) return;
@@ -1431,31 +1728,17 @@
       if (!animate) sheet.style.transition = 'none';
       sheet.dataset.state = state;
       if (!animate) setTimeout(() => { sheet.style.transition = ''; }, 50);
-
       const h = state === 'peek' ? peekH() : state === 'mid' ? midH() : fullH();
       statusPill.style.bottom = (h + 12) + 'px';
-
       updateLegendVisibility();
     }
 
-    function onDragStart(clientY) {
-      isDragging = true;
-      dragStartY = clientY;
-      dragStartState = sheetState;
-      dragDelta = 0;
-      sheet.style.transition = 'none';
-    }
-
-    function onDragMove(clientY) {
-      if (!isDragging) return;
-      dragDelta = dragStartY - clientY;
-    }
-
+    function onDragStart(clientY) { isDragging = true; dragStartY = clientY; dragStartState = sheetState; dragDelta = 0; sheet.style.transition = 'none'; }
+    function onDragMove(clientY) { if (!isDragging) return; dragDelta = dragStartY - clientY; }
     function onDragEnd() {
       if (!isDragging) return;
       isDragging = false;
       sheet.style.transition = '';
-
       const threshold = 60;
       if (dragStartState === 'peek') {
         setSheetState(dragDelta > threshold ? 'mid' : 'peek');
@@ -1480,6 +1763,9 @@
       terraceInfoSection.classList.add('hidden');
     });
 
+    /* ════════════════════════════════════════
+       STATUS PILL
+    ════════════════════════════════════════ */
     let statusTimeout = null;
 
     function showStatus(msg, isError = false, loading = false) {
@@ -1487,9 +1773,7 @@
       statusPill.className = 'visible' + (isError ? ' error' : '');
       clearTimeout(statusTimeout);
       if (!loading) {
-        statusTimeout = setTimeout(() => {
-          statusPill.className = '';
-        }, 2800);
+        statusTimeout = setTimeout(() => { statusPill.className = ''; }, 2800);
       }
     }
 
@@ -1498,17 +1782,9 @@
       statusPill.className = '';
     }
 
-    function updateHour(hour) {
-      hourBadge.textContent = `${String(hour).padStart(2, '0')}:00`;
-    }
-
-    function clampHour(hour) {
-      return Math.max(6, Math.min(21, Number(hour)));
-    }
-
-    function isFiniteNumber(v) {
-      return Number.isFinite(Number(v));
-    }
+    function updateHour(hour) { hourBadge.textContent = `${String(hour).padStart(2, '0')}:00`; }
+    function clampHour(hour) { return Math.max(6, Math.min(21, Number(hour))); }
+    function isFiniteNumber(v) { return Number.isFinite(Number(v)); }
 
     function toNumberOrNull(v) {
       if (v === null || v === undefined) return null;
@@ -1518,57 +1794,11 @@
 
     function escapeHtml(str) {
       return String(str ?? '')
-        .replaceAll('&', '&amp;')
-        .replaceAll('<', '&lt;')
-        .replaceAll('>', '&gt;')
-        .replaceAll('"', '&quot;')
-        .replaceAll("'", '&#039;');
+        .replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;').replaceAll("'", '&#039;');
     }
 
-    function formatPercent(v) {
-      const n = toNumberOrNull(v);
-      if (n === null) return '—';
-      const pct = n <= 1 ? n * 100 : n;
-      return `${Math.min(pct, 100).toFixed(1)} %`;
-    }
-
-    function buildAllTerracesShadowQuery(alias, selectedDate, selectedHour) {
-      const representativeDate = getRepresentativeWednesdayDateForSelectedWeek(selectedDate);
-      return `
-        SELECT terraza_id, shadow_pct
-        FROM read_parquet('${alias}')
-        WHERE substr(
-          coalesce(cast(date as varchar), cast(datetime as varchar)), 1, 10
-        ) = '${representativeDate}'
-          AND EXTRACT(HOUR FROM datetime) = ${Number(selectedHour)}
-      `;
-    }
-
-    async function refreshTerraceShadowColors() {
-      if (!db || !conn || !terracesGeojson) return;
-
-      const selectedDate = dateInput.value;
-      const selectedHour = Number(hourSlider.value);
-
-      try {
-        const { alias } = await ensureWeekRegistered(selectedDate);
-        const sql = buildAllTerracesShadowQuery(alias, selectedDate, selectedHour);
-        const result = await conn.query(sql);
-        const rows = await arrowTableToRows(result);
-
-        shadowByTerraceId.clear();
-        for (const row of rows) {
-          const tid = Number(row.terraza_id);
-          if (Number.isFinite(tid)) {
-            shadowByTerraceId.set(tid, row.shadow_pct);
-          }
-        }
-
-        renderTerracesLayer();
-      } catch (err) {
-        console.error('Error actualizando colores de sombra:', err);
-      }
-    }
+    function toNumberOrNull2(v) { return toNumberOrNull(v); }
 
     function toIntOrDash(v) {
       const n = Number(v);
@@ -1580,70 +1810,174 @@
       return String(v).trim() || '—';
     }
 
+    /* ════════════════════════════════════════
+       USER LOCATION — PERSISTENCE
+    ════════════════════════════════════════ */
+    function saveUserLocation(lat, lng) {
+      const data = { lat, lng, timestamp: new Date().toISOString() };
+      try {
+        localStorage.setItem(USER_LOC_STORAGE_KEY, JSON.stringify(data));
+      } catch (e) { /* localStorage might be unavailable */ }
+      userLocationData = data;
+      updateExportBtnVisibility();
+    }
+
+    function loadSavedUserLocation() {
+      try {
+        const raw = localStorage.getItem(USER_LOC_STORAGE_KEY);
+        if (!raw) return null;
+        const data = JSON.parse(raw);
+        if (typeof data.lat === 'number' && typeof data.lng === 'number') return data;
+      } catch (e) {}
+      return null;
+    }
+
+
+    function updateExportBtnVisibility() {
+      /**/
+    }
+
+    /* ════════════════════════════════════════
+       USER LOCATION MARKER (improved)
+    ════════════════════════════════════════ */
+    function showUserLocationMarker(lat, lng) {
+      if (userLocationHalo) { map.removeLayer(userLocationHalo); userLocationHalo = null; }
+      if (userLocationMarker) { map.removeLayer(userLocationMarker); userLocationMarker = null; }
+
+      /* Outer pulsing halo */
+      userLocationHalo = L.circleMarker([lat, lng], {
+        radius: 20,
+        color: '#00bcd4',
+        weight: 1.5,
+        fillColor: '#00bcd4',
+        fillOpacity: 0.12,
+        className: 'user-loc-halo',
+      }).addTo(map);
+
+      /* Inner dot — distinct turquoise color */
+      userLocationMarker = L.circleMarker([lat, lng], {
+        radius: 7,
+        color: '#ffffff',
+        weight: 2.5,
+        fillColor: '#00bcd4',
+        fillOpacity: 1,
+        className: 'user-loc-dot',
+      }).addTo(map);
+
+      /* Add CSS pulse animation to the halo */
+      const halosEl = document.querySelectorAll('.user-loc-halo');
+      halosEl.forEach(el => {
+        el.style.animation = 'locPulse 2s ease-out infinite';
+      });
+    }
+
+    /* ════════════════════════════════════════
+       GEOLOCATION BUTTON
+    ════════════════════════════════════════ */
+    function handleLocate() {
+      if (!navigator.geolocation) {
+        showStatus('Geolocalización no disponible', true);
+        return;
+      }
+      fabLocate.classList.add('locating');
+      showStatus('Obteniendo ubicación…', false, true);
+
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          const { latitude: lat, longitude: lng } = pos.coords;
+          fabLocate.classList.remove('locating');
+          hideStatus();
+
+          saveUserLocation(lat, lng);
+          showUserLocationMarker(lat, lng);
+          map.flyTo([lat, lng], Math.max(map.getZoom(), 15), { duration: 0.6 });
+        },
+        (err) => {
+          fabLocate.classList.remove('locating');
+          const msgs = { 1: 'Permiso denegado', 2: 'Posición no disponible', 3: 'Tiempo agotado' };
+          showStatus(msgs[err.code] || 'Error de geolocalización', true);
+        },
+        { enableHighAccuracy: true, timeout: 10000, maximumAge: 30000 }
+      );
+    }
+
+    fabLocate?.addEventListener('click', handleLocate);
+
+    /* Restore saved location on load */
+    function restoreSavedLocation() {
+      const saved = loadSavedUserLocation();
+      if (!saved) return;
+      userLocationData = saved;
+      showUserLocationMarker(saved.lat, saved.lng);
+      updateExportBtnVisibility();
+    }
+
+
+
+    /* ════════════════════════════════════════
+       SHADOW QUERY HELPERS
+    ════════════════════════════════════════ */
+    function buildAllTerracesShadowQuery(alias, selectedDate, selectedHour) {
+      const representativeDate = getRepresentativeWednesdayDateForSelectedWeek(selectedDate);
+      return `
+        SELECT terraza_id, shadow_pct
+        FROM read_parquet('${alias}')
+        WHERE substr(coalesce(cast(date as varchar), cast(datetime as varchar)), 1, 10) = '${representativeDate}'
+          AND EXTRACT(HOUR FROM datetime) = ${Number(selectedHour)}
+      `;
+    }
+
+    async function refreshTerraceShadowColors() {
+      if (!db || !conn || !terracesGeojson) return;
+      const selectedDate = dateInput.value;
+      const selectedHour = Number(hourSlider.value);
+      try {
+        const { alias } = await ensureWeekRegistered(selectedDate);
+        const sql = buildAllTerracesShadowQuery(alias, selectedDate, selectedHour);
+        const result = await conn.query(sql);
+        const rows = await arrowTableToRows(result);
+        shadowByTerraceId.clear();
+        for (const row of rows) {
+          const tid = Number(row.terraza_id);
+          if (Number.isFinite(tid)) shadowByTerraceId.set(tid, row.shadow_pct);
+        }
+        renderTerracesLayer();
+      } catch (err) {
+        console.error('Error actualizando colores de sombra:', err);
+      }
+    }
+
     function renderTerraceInfo(feature) {
-      if (!feature || !feature.properties) {
+      if (!feature?.properties) {
         terraceInfoSection.classList.add('hidden');
         terraceInfoCard.innerHTML = '';
         return;
       }
-
       const p = feature.properties;
-
-      const totalEstufas =
-        (Number(p.estufas_gas_es) || 0) +
-        (Number(p.estufas_electricas_es) || 0);
-
-      const subtitle = [
-        safeText(p.desc_nombre),
-        safeText(p.num_terraza),
-        safeText(p.desc_barrio_local)
-      ].filter(v => v !== '—').join(' · ');
+      const totalEstufas = (Number(p.estufas_gas_es) || 0) + (Number(p.estufas_electricas_es) || 0);
+      const subtitle = [safeText(p.desc_nombre), safeText(p.num_terraza), safeText(p.desc_barrio_local)]
+        .filter(v => v !== '—').join(' · ');
 
       terraceInfoCard.innerHTML = `
         <div class="terrace-info-title">${escapeHtml(safeText(p.rotulo))}</div>
         <div class="terrace-info-subtitle">${escapeHtml(subtitle || 'Terraza seleccionada')}</div>
         <div class="terrace-info-grid">
-          <div class="info-pill">
-            <div class="info-pill-label">Mesas</div>
-            <div class="info-pill-value">${escapeHtml(toIntOrDash(p.mesas_es))}</div>
-          </div>
-          <div class="info-pill">
-            <div class="info-pill-label">Sillas</div>
-            <div class="info-pill-value">${escapeHtml(toIntOrDash(p.sillas_es))}</div>
-          </div>
-          <div class="info-pill">
-            <div class="info-pill-label">Sombrillas</div>
-            <div class="info-pill-value">${escapeHtml(toIntOrDash(p.sombrillas_es))}</div>
-          </div>
-          <div class="info-pill">
-            <div class="info-pill-label">Estufas</div>
-            <div class="info-pill-value">${escapeHtml(toIntOrDash(totalEstufas))}</div>
-          </div>
+          <div class="info-pill"><div class="info-pill-label">Mesas</div><div class="info-pill-value">${escapeHtml(toIntOrDash(p.mesas_es))}</div></div>
+          <div class="info-pill"><div class="info-pill-label">Sillas</div><div class="info-pill-value">${escapeHtml(toIntOrDash(p.sillas_es))}</div></div>
+          <div class="info-pill"><div class="info-pill-label">Sombrillas</div><div class="info-pill-value">${escapeHtml(toIntOrDash(p.sombrillas_es))}</div></div>
+          <div class="info-pill"><div class="info-pill-label">Estufas</div><div class="info-pill-value">${escapeHtml(toIntOrDash(totalEstufas))}</div></div>
         </div>
         <div class="terrace-info-list">
           <div class="terrace-info-item">
             <div class="info-pill-label">Horario L-J</div>
-            <div class="info-pill-value">
-              ${escapeHtml(
-                p.hora_ini_LJ_es && p.hora_fin_LJ_es
-                  ? `${p.hora_ini_LJ_es} – ${p.hora_fin_LJ_es}`
-                  : '—'
-              )}
-            </div>
+            <div class="info-pill-value">${escapeHtml(p.hora_ini_LJ_es && p.hora_fin_LJ_es ? `${p.hora_ini_LJ_es} – ${p.hora_fin_LJ_es}` : '—')}</div>
           </div>
           <div class="terrace-info-item">
             <div class="info-pill-label">Horario V-S</div>
-            <div class="info-pill-value">
-              ${escapeHtml(
-                p.hora_ini_VS_es && p.hora_fin_VS_es
-                  ? `${p.hora_ini_VS_es} – ${p.hora_fin_VS_es}`
-                  : '—'
-              )}
-            </div>
+            <div class="info-pill-value">${escapeHtml(p.hora_ini_VS_es && p.hora_fin_VS_es ? `${p.hora_ini_VS_es} – ${p.hora_fin_VS_es}` : '—')}</div>
           </div>
         </div>
       `;
-
       terraceInfoSection.classList.remove('hidden');
     }
 
@@ -1655,7 +1989,6 @@
         shadowTimeNote.textContent = 'Selecciona lugar, fecha y hora';
         return;
       }
-
       const capped = Math.min(pct, 100);
       const offset = RING_CIRCUMFERENCE * (1 - capped / 100);
       ringFill.style.strokeDashoffset = offset;
@@ -1665,10 +1998,7 @@
     }
 
     function clearLayer() {
-      if (currentLayer) {
-        map.removeLayer(currentLayer);
-        currentLayer = null;
-      }
+      if (currentLayer) { map.removeLayer(currentLayer); currentLayer = null; }
     }
 
     function resetSummary() {
@@ -1676,31 +2006,23 @@
       noResult.style.display = 'none';
     }
 
+    /* ── Date helpers ── */
     function toYMD(value) {
       if (!value) return null;
-      if (typeof value === 'string') {
-        const m = value.match(/^(\d{4}-\d{2}-\d{2})/);
-        if (m) return m[1];
-      }
+      if (typeof value === 'string') { const m = value.match(/^(\d{4}-\d{2}-\d{2})/); if (m) return m[1]; }
       const d = new Date(value);
       if (Number.isNaN(d.getTime())) return null;
-      const y = d.getFullYear();
-      const m = String(d.getMonth() + 1).padStart(2, '0');
-      const day = String(d.getDate()).padStart(2, '0');
-      return `${y}-${m}-${day}`;
+      return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
     }
 
     function getHourFromDatetime(value) {
       if (!value) return null;
       if (typeof value === 'string') {
-        const m = value.match(/T(\d{2}):/);
-        if (m) return Number(m[1]);
-        const m2 = value.match(/ (\d{2}):/);
-        if (m2) return Number(m2[1]);
+        const m = value.match(/T(\d{2}):/); if (m) return Number(m[1]);
+        const m2 = value.match(/ (\d{2}):/); if (m2) return Number(m2[1]);
       }
       const d = new Date(value);
-      if (Number.isNaN(d.getTime())) return null;
-      return d.getHours();
+      return Number.isNaN(d.getTime()) ? null : d.getHours();
     }
 
     function getIsoWeekInfo(dateString) {
@@ -1719,10 +2041,7 @@
       const simple = new Date(Date.UTC(isoYear, 0, 4 + (isoWeek - 1) * 7));
       const dow = simple.getUTCDay() || 7;
       simple.setUTCDate(simple.getUTCDate() - dow + isoWeekday);
-      const y = simple.getUTCFullYear();
-      const m = String(simple.getUTCMonth() + 1).padStart(2, '0');
-      const d = String(simple.getUTCDate()).padStart(2, '0');
-      return `${y}-${m}-${d}`;
+      return `${simple.getUTCFullYear()}-${String(simple.getUTCMonth()+1).padStart(2,'0')}-${String(simple.getUTCDate()).padStart(2,'0')}`;
     }
 
     function getRepresentativeWednesdayDateForSelectedWeek(selectedDate) {
@@ -1732,27 +2051,24 @@
 
     function buildWeekFileName(dateString) {
       const { isoWeek } = getIsoWeekInfo(dateString);
-      return `${FILE_BASENAME}_${FILE_YEAR_IN_BUCKET}_W${String(isoWeek).padStart(2, '0')}${FILE_SUFFIX}`;
+      return `${FILE_BASENAME}_${FILE_YEAR_IN_BUCKET}_W${String(isoWeek).padStart(2,'0')}${FILE_SUFFIX}`;
     }
 
-    function buildWeekUrl(dateString) {
-      return `${BUCKET_BASE_URL}/${buildWeekFileName(dateString)}`;
-    }
+    function buildWeekUrl(dateString) { return `${BUCKET_BASE_URL}/${buildWeekFileName(dateString)}`; }
 
     function buildWeekAlias(dateString) {
       const { isoWeek } = getIsoWeekInfo(dateString);
-      return `week_${FILE_YEAR_IN_BUCKET}_W${String(isoWeek).padStart(2, '0')}.parquet`;
+      return `week_${FILE_YEAR_IN_BUCKET}_W${String(isoWeek).padStart(2,'0')}.parquet`;
     }
 
+    /* ── Projection ── */
     function transformCoords25830To4326(coords) {
       if (!Array.isArray(coords)) return coords;
       if (coords.length >= 2 && !Array.isArray(coords[0])) {
-        const x = Number(coords[0]);
-        const y = Number(coords[1]);
-        if (!isFiniteNumber(x) || !isFiniteNumber(y)) throw new Error('Coordenadas no finitas detectadas');
+        const x = Number(coords[0]), y = Number(coords[1]);
+        if (!isFiniteNumber(x) || !isFiniteNumber(y)) throw new Error('Coordenadas no finitas');
         const result = proj4(SOURCE_EPSG, TARGET_EPSG, [x, y]);
-        const lon = Number(result[0]);
-        const lat = Number(result[1]);
+        const lon = Number(result[0]), lat = Number(result[1]);
         if (!isFiniteNumber(lon) || !isFiniteNumber(lat)) throw new Error('Reproyección inválida');
         return [lon, lat];
       }
@@ -1760,12 +2076,9 @@
     }
 
     function reprojectGeometry(geometry) {
-      if (!geometry || !geometry.type) return null;
+      if (!geometry?.type) return null;
       if (geometry.type === 'GeometryCollection') {
-        return {
-          ...geometry,
-          geometries: (geometry.geometries || []).map(reprojectGeometry).filter(Boolean),
-        };
+        return { ...geometry, geometries: (geometry.geometries || []).map(reprojectGeometry).filter(Boolean) };
       }
       if (!geometry.coordinates) return null;
       return { ...geometry, coordinates: transformCoords25830To4326(geometry.coordinates) };
@@ -1807,7 +2120,7 @@
     function rowToFeature(row, rowIndex = null) {
       const sourceGeometry = getGeometryFromRow(row, rowIndex);
       const geom4326 = reprojectGeometry(sourceGeometry);
-      if (!geom4326) throw new Error(`Fila ${rowIndex}: no se pudo reproyectar la geometría`);
+      if (!geom4326) throw new Error(`Fila ${rowIndex}: no se pudo reproyectar`);
       return {
         type: 'Feature',
         geometry: geom4326,
@@ -1842,6 +2155,7 @@
       return arr.map(normalizeDuckRow);
     }
 
+    /* ── Catalog loading ── */
     async function loadRotulosCatalog() {
       try {
         const res = await fetch(ROTULOS_JSON_URL, { cache: 'no-store' });
@@ -1867,9 +2181,7 @@
         const res = await fetch(TERRACES_GEOJSON_URL, { cache: 'no-store' });
         if (!res.ok) throw new Error(`No se pudo leer ${TERRACES_GEOJSON_URL}`);
         const data = await res.json();
-        if (!data || data.type !== 'FeatureCollection' || !Array.isArray(data.features)) {
-          throw new Error('GeoJSON inválido');
-        }
+        if (!data || data.type !== 'FeatureCollection' || !Array.isArray(data.features)) throw new Error('GeoJSON inválido');
         terracesGeojson = data;
         buildTypeDropdownOptions();
         renderTerracesLayer();
@@ -1879,312 +2191,183 @@
       }
     }
 
-    /* ──────────────────────────────────────────────────────
-       CUSTOM TYPE DROPDOWN  (replaces native <select>)
-    ────────────────────────────────────────────────────── */
+    /* ════════════════════════════════════════
+       TYPE FILTER
+    ════════════════════════════════════════ */
+    const TYPE_OPTION_META = {
+      '':                     { label: 'Todos',        icon: '🗂️', match: [] },
+      'bar':                  { label: 'Bar',           icon: '🍺', match: ['bar'] },
+      'restaurante':          { label: 'Restaurante',   icon: '🍽️', match: ['restaurante'] },
+      'cafeteria':            { label: 'Cafetería',     icon: '☕', match: ['cafeteria'] },
+      'cerveceria / taberna': { label: 'Cervecería',    icon: '🍻', match: ['cerveceria', 'taberna'] },
+      'comida rapida':        { label: 'Fast food',     icon: '🌮', match: ['comida rapida', 'fast food'] },
+      'heladeria / dulces':   { label: 'Heladería',     icon: '🍦', match: ['heladeria', 'dulces'] },
+    };
 
-
-	const TYPE_OPTION_META = {
-	  '': {
-		label: 'Todos',
-		icon: '🗂️',
-		match: []
-	  },
-
-	  'bar': {
-		label: 'Bar',
-		icon: '🍺',
-		match: ['bar']
-	  },
-
-	  'restaurante': {
-		label: 'Restaurante',
-		icon: '🍽️',
-		match: ['restaurante']
-	  },
-
-	  'cafeteria': {
-		label: 'Cafetería',
-		icon: '☕',
-		match: ['cafeteria']
-	  },
-
-	  'cerveceria / taberna': {
-		label: 'Cervecería',
-		icon: '🍻',
-		match: ['cerveceria', 'taberna']
-	  },
-
-	  'comida rapida': {
-		label: 'Fast food',
-		icon: '🌮',
-		match: ['comida rapida', 'fast food']
-	  },
-
-	  'heladeria / dulces': {
-		label: 'Heladería',
-		icon: '🍦',
-		match: ['heladeria', 'dulces']
-	  }
-	};
-
-
-
-
-
-
-
-
-
-    function buildTypeDropdownOptions() {
-	  if (!terracesGeojson?.features?.length || !typeFilterDropdown) return;
-
-	  const existingValues = new Set();
-
-	  for (const feature of terracesGeojson.features) {
-		const activity = normalizeActivityType(feature?.properties?.tipo_actividad);
-		if (activity && activity !== 'hosteleria otros') {
-		  existingValues.add(activity);
-		}
-	  }
-
-	  const preferredOrder = [
-		'',
-		'bar',
-		'restaurante',
-		'cafeteria',
-		'cerveceria / taberna',
-		'comida rapida',
-		'heladeria / dulces'
-	  ];
-
-	  const visibleOptions = preferredOrder.filter(value => {
-		if (value === '') return true;
-
-		const meta = TYPE_OPTION_META[value];
-		if (!meta?.match) return false;
-
-		return Array.from(existingValues).some(activity =>
-		  meta.match.some(m => activity.includes(m))
-		);
-	  });
-
-	  typeFilterDropdown.innerHTML = visibleOptions.map(value => {
-		const meta = TYPE_OPTION_META[value] || {
-		  label: formatActivityLabel(value),
-		  icon: '📍'
-		};
-
-		return `
-		  <div
-			class="type-option${value === activityTypeFilter ? ' selected' : ''}"
-			role="option"
-			aria-selected="${value === activityTypeFilter}"
-			data-value="${escapeHtml(value)}"
-		  >
-			<svg class="type-option-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-			  <polyline points="20 6 9 17 4 12"/>
-			</svg>
-			<span class="type-option-icon" aria-hidden="true">${meta.icon}</span>
-			<span>${escapeHtml(meta.label)}</span>
-		  </div>
-		`;
-	  }).join('');
-
-	  typeFilterDropdown.querySelectorAll('.type-option').forEach(el => {
-		el.addEventListener('click', () => {
-		  selectTypeOption(el.dataset.value);
-		});
-	  });
-	}
-
-    function selectTypeOption(value) {
-	  activityTypeFilter = value || '';
-
-	  const meta = TYPE_OPTION_META[activityTypeFilter] || { label: 'Todos' };
-	  typeBtnLabelText.textContent = meta.label || 'Todos';
-
-	  typeFilterBtn.classList.toggle('has-value', !!activityTypeFilter);
-
-	  typeFilterDropdown.querySelectorAll('.type-option').forEach(el => {
-		const isSelected = el.dataset.value === activityTypeFilter;
-		el.classList.toggle('selected', isSelected);
-		el.setAttribute('aria-selected', isSelected ? 'true' : 'false');
-	  });
-
-	  closeTypeDropdown();
-	  renderTerracesLayer();
-	}
-
-    function openTypeDropdown() {
-      typeFilterDropdown.classList.add('open');
-      typeFilterBtn.setAttribute('aria-expanded', 'true');
+    function buildTypeOptionHTML(value, isSelected) {
+      const meta = TYPE_OPTION_META[value] || { label: formatActivityLabel(value), icon: '📍' };
+      return `
+        <div
+          class="type-option${isSelected ? ' selected' : ''}"
+          role="option"
+          aria-selected="${isSelected}"
+          data-value="${escapeHtml(value)}"
+        >
+          <svg class="type-option-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <polyline points="20 6 9 17 4 12"/>
+          </svg>
+          <span class="type-option-icon" aria-hidden="true">${meta.icon}</span>
+          <span>${escapeHtml(meta.label)}</span>
+        </div>
+      `;
     }
 
-    function closeTypeDropdown() {
-      typeFilterDropdown.classList.remove('open');
-      typeFilterBtn.setAttribute('aria-expanded', 'false');
+    function buildTypeDropdownOptions() {
+      if (!terracesGeojson?.features?.length) return;
+
+      const existingValues = new Set();
+      for (const feature of terracesGeojson.features) {
+        const activity = normalizeActivityType(feature?.properties?.tipo_actividad);
+        if (activity && activity !== 'hosteleria otros') existingValues.add(activity);
+      }
+
+      const preferredOrder = ['', 'bar', 'restaurante', 'cafeteria', 'cerveceria / taberna', 'comida rapida', 'heladeria / dulces'];
+      const visibleOptions = preferredOrder.filter(value => {
+        if (value === '') return true;
+        const meta = TYPE_OPTION_META[value];
+        if (!meta?.match) return false;
+        return Array.from(existingValues).some(activity => meta.match.some(m => activity.includes(m)));
+      });
+
+      const html = visibleOptions.map(v => buildTypeOptionHTML(v, v === activityTypeFilter)).join('');
+
+      /* Mobile dropdown */
+      if (typeFilterDropdown) {
+        typeFilterDropdown.innerHTML = html;
+        typeFilterDropdown.querySelectorAll('.type-option').forEach(el => {
+          el.addEventListener('click', () => selectTypeOption(el.dataset.value, 'mobile'));
+        });
+      }
+
+      /* Desktop dropdown */
+      if (desktopTypeDropdown) {
+        desktopTypeDropdown.innerHTML = html;
+        desktopTypeDropdown.querySelectorAll('.type-option').forEach(el => {
+          el.addEventListener('click', () => selectTypeOption(el.dataset.value, 'desktop'));
+        });
+      }
+    }
+
+    function selectTypeOption(value, source = 'mobile') {
+      activityTypeFilter = value || '';
+      const meta = TYPE_OPTION_META[activityTypeFilter] || { label: 'Todos', icon: '🗂️' };
+
+      /* Update mobile UI */
+      if (typeBtnLabelText) typeBtnLabelText.textContent = meta.label || 'Todos';
+      if (typeFilterBtn) typeFilterBtn.classList.toggle('has-value', !!activityTypeFilter);
+
+      /* Update desktop UI */
+      if (desktopTypeBtn) {
+        desktopTypeBtn.innerHTML = `${meta.icon}<span class="fab-tooltip">Tipo: ${meta.label}</span>`;
+        desktopTypeBtn.classList.toggle('has-value', !!activityTypeFilter);
+      }
+
+      /* Sync both dropdowns */
+      [typeFilterDropdown, desktopTypeDropdown].forEach(dropdown => {
+        if (!dropdown) return;
+        dropdown.querySelectorAll('.type-option').forEach(el => {
+          const isSelected = el.dataset.value === activityTypeFilter;
+          el.classList.toggle('selected', isSelected);
+          el.setAttribute('aria-selected', isSelected ? 'true' : 'false');
+        });
+      });
+
+      closeTypeDropdown('mobile');
+      closeTypeDropdown('desktop');
+      renderTerracesLayer();
+    }
+
+
+	function positionMobileTypeDropdown() {
+	  if (window.innerWidth >= 720) return;
+	  if (!typeFilterBtn || !typeFilterDropdown || !searchWrap) return;
+
+	  const btnRect = typeFilterBtn.getBoundingClientRect();
+	  const wrapRect = searchWrap.getBoundingClientRect();
+
+	  const top = btnRect.bottom - wrapRect.top + 8;
+	  const left = btnRect.left - wrapRect.left;
+
+	  typeFilterDropdown.style.top = `${top}px`;
+	  typeFilterDropdown.style.left = `${left}px`;
+	}
+
+    function openTypeDropdown(target = 'mobile') {
+	  if (target === 'desktop') {
+		desktopTypeDropdown?.classList.add('open');
+		desktopTypeBtn?.setAttribute('aria-expanded', 'true');
+	  } else {
+		positionMobileTypeDropdown();
+		typeFilterDropdown?.classList.add('open');
+		typeFilterBtn?.setAttribute('aria-expanded', 'true');
+	  }
+	}
+
+    function closeTypeDropdown(target = 'mobile') {
+      if (target === 'desktop') {
+        desktopTypeDropdown?.classList.remove('open');
+        desktopTypeBtn?.setAttribute('aria-expanded', 'false');
+      } else {
+        typeFilterDropdown?.classList.remove('open');
+        typeFilterBtn?.setAttribute('aria-expanded', 'false');
+      }
     }
 
     typeFilterBtn?.addEventListener('click', (e) => {
       e.stopPropagation();
-      typeFilterDropdown.classList.contains('open') ? closeTypeDropdown() : openTypeDropdown();
+      typeFilterDropdown?.classList.contains('open') ? closeTypeDropdown('mobile') : openTypeDropdown('mobile');
+    });
+
+    desktopTypeBtn?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      desktopTypeDropdown?.classList.contains('open') ? closeTypeDropdown('desktop') : openTypeDropdown('desktop');
     });
 
     document.addEventListener('click', (e) => {
-      if (!e.target.closest('.type-filter-wrap')) closeTypeDropdown();
+      if (!e.target.closest('.type-filter-wrap') && !e.target.closest('.desktop-type-wrap')) {
+        closeTypeDropdown('mobile');
+        closeTypeDropdown('desktop');
+      }
       if (!e.target.closest('#search-wrap')) closeAC();
     });
 
     document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') closeTypeDropdown();
+      if (e.key === 'Escape') { closeTypeDropdown('mobile'); closeTypeDropdown('desktop'); }
     });
 
     function formatActivityLabel(value) {
-      const map = {
-        'bar': 'Bar', 'restaurante': 'Restaurante', 'cafeteria': 'Cafetería',
-        'cerveceria / taberna': 'Cervecería', 'comida rapida': 'Fast food',
-        'heladeria / dulces': 'Heladería'
-      };
+      const map = { 'bar': 'Bar', 'restaurante': 'Restaurante', 'cafeteria': 'Cafetería', 'cerveceria / taberna': 'Cervecería', 'comida rapida': 'Fast food', 'heladeria / dulces': 'Heladería' };
       return map[value] || (value.charAt(0).toUpperCase() + value.slice(1));
     }
 
-    /* ──────────────────────────────────────────────────────
-       GEOLOCATION BUTTON
-    ────────────────────────────────────────────────────── */
-
-    let userLocationMarker = null;
-
-    locateBtn?.addEventListener('click', () => {
-      if (!navigator.geolocation) {
-        showStatus('Geolocalización no disponible en este dispositivo', true);
-        return;
-      }
-
-      locateBtn.classList.add('locating');
-      showStatus('Obteniendo ubicación…', false, true);
-
-      navigator.geolocation.getCurrentPosition(
-        (pos) => {
-          const { latitude: lat, longitude: lng } = pos.coords;
-
-          locateBtn.classList.remove('locating');
-          hideStatus();
-
-          if (userLocationMarker) map.removeLayer(userLocationMarker);
-
-          userLocationMarker = L.circleMarker([lat, lng], {
-            radius: 8,
-            color: '#ffffff',
-            weight: 2.5,
-            fillColor: '#005ea8',
-            fillOpacity: 1,
-          }).addTo(map);
-
-          map.flyTo([lat, lng], Math.max(map.getZoom(), 15), { duration: 0.6 });
-        },
-        (err) => {
-          locateBtn.classList.remove('locating');
-          const msgs = {
-            1: 'Permiso de ubicación denegado',
-            2: 'No se pudo obtener la ubicación',
-            3: 'Tiempo de espera agotado',
-          };
-          showStatus(msgs[err.code] || 'Error de geolocalización', true);
-        },
-        { enableHighAccuracy: true, timeout: 10000, maximumAge: 30000 }
-      );
-    });
-
-    /* ──────────────────────────────────────────────────────
-       AUTOCOMPLETE
-    ────────────────────────────────────────────────────── */
-
-    function getItemDisplayLabel(item) {
-      return item.label_busqueda || item.rotulo_formateado || item.rotulo_original || `Terraza ${item.terraza_id}`;
+    /* ── Green filter (shared between mobile + desktop) ── */
+    function toggleGreenFilter() {
+      greenFilterActive = !greenFilterActive;
+      /* Mobile */
+      greenFilterToggle?.classList.toggle('is-active', greenFilterActive);
+      greenFilterToggle?.setAttribute('aria-pressed', greenFilterActive ? 'true' : 'false');
+      /* Desktop */
+      desktopGreenFilter?.classList.toggle('is-active', greenFilterActive);
+      desktopGreenFilter?.setAttribute('aria-pressed', greenFilterActive ? 'true' : 'false');
+      renderTerracesLayer();
     }
 
-    function closeAC() {
-      acList.innerHTML = '';
-      acList.classList.remove('open');
-      currentSuggestions = [];
-      selectedSuggIdx = -1;
-    }
+    greenFilterToggle?.addEventListener('click', toggleGreenFilter);
+    desktopGreenFilter?.addEventListener('click', toggleGreenFilter);
 
-    function renderAC(items) {
-      currentSuggestions = items;
-      selectedSuggIdx = -1;
-
-      if (!items.length) { closeAC(); return; }
-
-      acList.innerHTML = items.map((item, index) => {
-        const title = escapeHtml(getItemDisplayLabel(item));
-        const subtitle = item.direccion_resumen
-          ? escapeHtml(item.direccion_resumen)
-          : escapeHtml(item.nombre_via || '');
-        return `
-          <div class="ac-item" role="option" data-idx="${index}">
-            <div class="ac-pin">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="white" stroke="none">
-                <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5S10.62 6.5 12 6.5s2.5 1.12 2.5 2.5S13.38 11.5 12 11.5z"/>
-              </svg>
-            </div>
-            <div class="ac-text">
-              <div class="ac-title">${title}</div>
-              <div class="ac-sub">${subtitle}</div>
-            </div>
-          </div>
-        `;
-      }).join('');
-
-      acList.classList.add('open');
-
-      acList.querySelectorAll('.ac-item').forEach(el => {
-        el.addEventListener('mousedown', (e) => { e.preventDefault(); selectSuggestion(Number(el.dataset.idx)); });
-        el.addEventListener('touchend', (e) => { e.preventDefault(); selectSuggestion(Number(el.dataset.idx)); });
-      });
-    }
-
-    function highlightAC() {
-      acList.querySelectorAll('.ac-item').forEach((el, i) => {
-        el.classList.toggle('active', i === selectedSuggIdx);
-      });
-    }
-
-    function searchCatalog(query) {
-      const q = normalizeText(query);
-      if (!q) return [];
-      const starts = [], contains = [];
-      for (const item of rotulosCatalog) {
-        if (!item._search_blob.includes(q)) continue;
-        const label = normalizeText(getItemDisplayLabel(item));
-        label.startsWith(q) ? starts.push(item) : contains.push(item);
-      }
-      return [...starts, ...contains].slice(0, 12);
-    }
-
-    function selectSuggestion(index) {
-      const item = currentSuggestions[index];
-      if (!item) return;
-
-      const feature = findTerraceFeatureById(item.terraza_id);
-      if (feature) { selectTerraceFeature(feature); return; }
-
-      selectedTerraceId = item.terraza_id;
-      selectedRotulo = getItemDisplayLabel(item);
-      searchInput.value = selectedRotulo;
-      searchClear.classList.add('visible');
-      closeAC();
-      searchInput.blur();
-      document.activeElement?.blur();
-
-      placeName.textContent = selectedRotulo;
-      placeName.classList.remove('empty');
-
-      setSheetState('mid');
-      scheduleLoad();
-    }
-
+    /* ════════════════════════════════════════
+       TERRACE LAYER RENDERING
+    ════════════════════════════════════════ */
     function getShadowPctForTerrace(terraceId) {
       const raw = shadowByTerraceId.get(Number(terraceId));
       if (raw === null || raw === undefined) return null;
@@ -2202,51 +2385,64 @@
     }
 
     function getMarkerFillColor(feature) {
-      const terraceId = Number(feature?.properties?.id_terraza);
-      if (!isMobileLayout()) {
-        return (selectedTerraceId !== null && terraceId === Number(selectedTerraceId))
-          ? '#0f3d68' : '#005ea8';
-      }
-      const pct = getShadowPctForTerrace(terraceId);
-      const bucket = getSunBucketFromShadowPct(pct);
-      if (bucket === 0) return '#2f6fb3';
-      if (bucket === 1) return '#6fa8dc';
-      if (bucket === 2) return '#f4b942';
-      return '#d8572a';
-    }
+	  const terraceId = Number(feature?.properties?.id_terraza);
+	  const pct = getShadowPctForTerrace(terraceId);
+	  const bucket = getSunBucketFromShadowPct(pct);
+
+	  let baseColor = '#2f6fb3';
+	  if (bucket === 1) baseColor = '#6fa8dc';
+	  else if (bucket === 2) baseColor = '#f4b942';
+	  else if (bucket === 3) baseColor = '#d8572a';
+
+	  const isSelected =
+		selectedTerraceId !== null &&
+		terraceId === Number(selectedTerraceId);
+
+	  return isSelected ? '#0f3d68' : baseColor;
+	}
+
 
     function renderTerracesLayer() {
-      if (!terracesGeojson) return;
+	  if (!terracesGeojson) return;
 
-      if (terracesLayer) { map.removeLayer(terracesLayer); terracesLayer = null; }
+	  if (terracesLayer) {
+		map.removeLayer(terracesLayer);
+		terracesLayer = null;
+	  }
 
-      const filteredFeatures = terracesGeojson.features.filter(feature => {
-        if (!isMobileLayout()) return true;
-        const passesGreen = !greenFilterActive || Number(feature?.properties?.tiene_zona_ajardinada) === 1;
-        const passesType = matchesActivityType(feature, activityTypeFilter);
-        return passesGreen && passesType;
-      });
+	  const filteredFeatures = terracesGeojson.features.filter(feature => {
+		const passesGreen =
+		  !greenFilterActive ||
+		  Number(feature?.properties?.tiene_zona_ajardinada) === 1;
 
-      terracesLayer = L.geoJSON(
-        { ...terracesGeojson, features: filteredFeatures },
-        {
-          pointToLayer: (feature, latlng) => {
-            const terraceId = Number(feature?.properties?.id_terraza);
-            const isSelected = selectedTerraceId !== null && terraceId === Number(selectedTerraceId);
-            return L.circleMarker(latlng, {
-              radius: isSelected ? 7 : 5,
-              color: '#ffffff',
-              weight: 2,
-              fillColor: getMarkerFillColor(feature),
-              fillOpacity: isSelected ? 1 : 0.92
-            });
-          },
-          onEachFeature: (feature, layer) => {
-            layer.on('click', () => selectTerraceFeature(feature));
-          }
-        }
-      ).addTo(map);
-    }
+		const passesType = matchesActivityType(feature, activityTypeFilter);
+
+		return passesGreen && passesType;
+	  });
+
+	  terracesLayer = L.geoJSON(
+		{ ...terracesGeojson, features: filteredFeatures },
+		{
+		  pointToLayer: (feature, latlng) => {
+			const terraceId = Number(feature?.properties?.id_terraza);
+			const isSelected =
+			  selectedTerraceId !== null &&
+			  terraceId === Number(selectedTerraceId);
+
+			return L.circleMarker(latlng, {
+			  radius: isSelected ? 7 : 5,
+			  color: '#ffffff',
+			  weight: 2,
+			  fillColor: getMarkerFillColor(feature),
+			  fillOpacity: isSelected ? 1 : 0.92
+			});
+		  },
+		  onEachFeature: (feature, layer) => {
+			layer.on('click', () => selectTerraceFeature(feature));
+		  }
+		}
+	  ).addTo(map);
+	}
 
     function findTerraceFeatureById(terraceId) {
       if (!terracesGeojson?.features?.length) return null;
@@ -2285,10 +2481,12 @@
       scheduleLoad();
     }
 
+    /* ════════════════════════════════════════
+       DUCKDB
+    ════════════════════════════════════════ */
     async function initDuckDB() {
       try {
         showStatus('Cargando datos…', false, true);
-
         const JSDELIVR_BUNDLES = duckdb.getJsDelivrBundles();
         const bundle = await duckdb.selectBundle(JSDELIVR_BUNDLES);
         if (!bundle) throw new Error('No se pudo seleccionar un bundle de DuckDB-Wasm');
@@ -2296,10 +2494,8 @@
         const workerUrl = URL.createObjectURL(
           new Blob([`importScripts("${bundle.mainWorker}");`], { type: 'text/javascript' })
         );
-
         const worker = new Worker(workerUrl);
         const logger = new duckdb.ConsoleLogger();
-
         db = new duckdb.AsyncDuckDB(logger, worker);
         await db.instantiate(bundle.mainModule, bundle.pthreadWorker);
         URL.revokeObjectURL(workerUrl);
@@ -2307,7 +2503,6 @@
         conn = await db.connect();
         await conn.query(`SET enable_progress_bar = false;`);
         await conn.query(`SET threads = 1;`);
-
         hideStatus();
       } catch (err) {
         showStatus('Error inicializando el motor de datos', true);
@@ -2339,9 +2534,7 @@
     }
 
     function getFitPadding() {
-      if (isMobileLayout()) {
-        return { paddingTopLeft: [24, 110], paddingBottomRight: [24, 320] };
-      }
+      if (isMobileLayout()) return { paddingTopLeft: [24, 110], paddingBottomRight: [24, 320] };
       return { paddingTopLeft: [400, 40], paddingBottomRight: [40, 40] };
     }
 
@@ -2368,8 +2561,7 @@
         const rows = await arrowTableToRows(result);
 
         currentDayFeatures = rows.map((row, i) => {
-          try { return rowToFeature(row, i); }
-          catch (err) { console.error(err); return null; }
+          try { return rowToFeature(row, i); } catch (err) { console.error(err); return null; }
         }).filter(Boolean);
 
         clearLayer();
@@ -2402,7 +2594,6 @@
         const raw = currentDayFeatures[0].properties.shadow_pct;
         const pct = raw !== null && raw !== undefined ? (raw <= 1 ? raw * 100 : raw) : null;
         updateRing(pct);
-
         hideStatus();
       } catch (err) {
         clearLayer();
@@ -2421,7 +2612,87 @@
       }, 120);
     }
 
-    /* ── Search input listeners ── */
+    /* ════════════════════════════════════════
+       AUTOCOMPLETE
+    ════════════════════════════════════════ */
+    function getItemDisplayLabel(item) {
+      return item.label_busqueda || item.rotulo_formateado || item.rotulo_original || `Terraza ${item.terraza_id}`;
+    }
+
+    function closeAC() {
+      acList.innerHTML = '';
+      acList.classList.remove('open');
+      currentSuggestions = [];
+      selectedSuggIdx = -1;
+    }
+
+    function renderAC(items) {
+      currentSuggestions = items;
+      selectedSuggIdx = -1;
+      if (!items.length) { closeAC(); return; }
+      acList.innerHTML = items.map((item, index) => {
+        const title = escapeHtml(getItemDisplayLabel(item));
+        const subtitle = item.direccion_resumen ? escapeHtml(item.direccion_resumen) : escapeHtml(item.nombre_via || '');
+        return `
+          <div class="ac-item" role="option" data-idx="${index}">
+            <div class="ac-pin">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="white" stroke="none">
+                <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5S10.62 6.5 12 6.5s2.5 1.12 2.5 2.5S13.38 11.5 12 11.5z"/>
+              </svg>
+            </div>
+            <div class="ac-text">
+              <div class="ac-title">${title}</div>
+              <div class="ac-sub">${subtitle}</div>
+            </div>
+          </div>
+        `;
+      }).join('');
+      acList.classList.add('open');
+      acList.querySelectorAll('.ac-item').forEach(el => {
+        el.addEventListener('mousedown', (e) => { e.preventDefault(); selectSuggestion(Number(el.dataset.idx)); });
+        el.addEventListener('touchend', (e) => { e.preventDefault(); selectSuggestion(Number(el.dataset.idx)); });
+      });
+    }
+
+    function highlightAC() {
+      acList.querySelectorAll('.ac-item').forEach((el, i) => {
+        el.classList.toggle('active', i === selectedSuggIdx);
+      });
+    }
+
+    function searchCatalog(query) {
+      const q = normalizeText(query);
+      if (!q) return [];
+      const starts = [], contains = [];
+      for (const item of rotulosCatalog) {
+        if (!item._search_blob.includes(q)) continue;
+        const label = normalizeText(getItemDisplayLabel(item));
+        label.startsWith(q) ? starts.push(item) : contains.push(item);
+      }
+      return [...starts, ...contains].slice(0, 12);
+    }
+
+    function selectSuggestion(index) {
+      const item = currentSuggestions[index];
+      if (!item) return;
+      const feature = findTerraceFeatureById(item.terraza_id);
+      if (feature) { selectTerraceFeature(feature); return; }
+
+      selectedTerraceId = item.terraza_id;
+      selectedRotulo = getItemDisplayLabel(item);
+      searchInput.value = selectedRotulo;
+      searchClear.classList.add('visible');
+      closeAC();
+      searchInput.blur();
+      document.activeElement?.blur();
+
+      placeName.textContent = selectedRotulo;
+      placeName.classList.remove('empty');
+      setSheetState('mid');
+      scheduleLoad();
+    }
+
+    /* ── Search listeners ── */
     searchInput.addEventListener('input', () => {
       const query = searchInput.value.trim();
       searchClear.classList.toggle('visible', query.length > 0);
@@ -2448,9 +2719,7 @@
       else if (e.key === 'Escape') closeAC();
     });
 
-    searchInput.addEventListener('blur', () => {
-      setTimeout(() => closeAC(), 150);
-    });
+    searchInput.addEventListener('blur', () => { setTimeout(() => closeAC(), 150); });
 
     searchClear.addEventListener('click', () => {
       searchInput.value = '';
@@ -2476,28 +2745,53 @@
       scheduleLoad();
     });
 
-    greenFilterToggle?.addEventListener('click', () => {
-      greenFilterActive = !greenFilterActive;
-      greenFilterToggle.classList.toggle('is-active', greenFilterActive);
-      greenFilterToggle.setAttribute('aria-pressed', greenFilterActive ? 'true' : 'false');
-      renderTerracesLayer();
-    });
 
+
+	window.addEventListener('resize', () => {
+	  if (typeFilterDropdown.classList.contains('open') && window.innerWidth < 720) {
+		positionMobileTypeDropdown();
+	  }
+	});
+
+	document.getElementById('mobile-filters-bar')?.addEventListener('scroll', () => {
+	  if (typeFilterDropdown.classList.contains('open') && window.innerWidth < 720) {
+		positionMobileTypeDropdown();
+	  }
+	});
+
+    /* ════════════════════════════════════════
+       DESKTOP INIT
+    ════════════════════════════════════════ */
     function checkDesktop() {
-      if (window.innerWidth >= 720) desktopLabel.style.display = 'block';
-      else desktopLabel.style.display = 'none';
-      updateLegendVisibility();
-    }
+	  const isDesktop = window.innerWidth >= 720;
+
+	  if (desktopLabel) {
+		desktopLabel.style.display = isDesktop ? 'block' : 'none';
+	  }
+
+	  if (desktopFabDivider) {
+		desktopFabDivider.style.display = isDesktop ? 'block' : 'none';
+	  }
+
+	  if (desktopGreenFilter) {
+		desktopGreenFilter.style.display = isDesktop ? 'flex' : 'none';
+	  }
+
+	  if (desktopTypeWrap) {
+		desktopTypeWrap.style.display = isDesktop ? 'block' : 'none';
+	  }
+
+	  updateLegendVisibility();
+	}
 
     function pad2(n) { return String(n).padStart(2, '0'); }
 
     function getInitialDateAndHour() {
       const now = new Date();
-      let ymd = `${now.getFullYear()}-${pad2(now.getMonth() + 1)}-${pad2(now.getDate())}`;
+      let ymd = `${now.getFullYear()}-${pad2(now.getMonth()+1)}-${pad2(now.getDate())}`;
       if (ymd < MIN_DATE) ymd = MIN_DATE;
       if (ymd > MAX_DATE) ymd = MAX_DATE;
-      let hour = clampHour(now.getHours());
-      return { ymd, hour };
+      return { ymd, hour: clampHour(now.getHours()) };
     }
 
     function setInitialDateAndHour() {
@@ -2507,12 +2801,17 @@
       updateHour(hour);
     }
 
+    /* ════════════════════════════════════════
+       BOOT
+    ════════════════════════════════════════ */
     checkDesktop();
     window.addEventListener('resize', checkDesktop);
 
     setInitialDateAndHour();
     resetSummary();
     setSheetState('peek', false);
+
+    restoreSavedLocation();
 
     await loadRotulosCatalog();
     await loadTerracesGeojson();
