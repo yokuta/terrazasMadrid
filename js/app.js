@@ -121,6 +121,7 @@ const terraceInfoSection = document.getElementById('terrace-info-section');
 const terraceInfoCard    = document.getElementById('terrace-info-card');
 const shadowLegend   = document.getElementById('shadow-legend');
 const searchWrap     = document.getElementById('search-wrap');
+const bootLoader = document.getElementById('boot-loader');
 
 // Mobile filter elements
 const greenFilterToggle        = document.getElementById('green-filter-toggle');
@@ -148,6 +149,17 @@ const desktopTypeDropdown = document.getElementById('desktop-type-dropdown');
 /* ============================================================
    4. UTILITIES
    ============================================================ */
+function showBootLoader(text = 'Cargando datos…') {
+  if (!bootLoader) return;
+  const textEl = bootLoader.querySelector('.boot-loader-text');
+  if (textEl) textEl.textContent = text;
+  bootLoader.classList.remove('is-hidden');
+}
+
+function hideBootLoader() {
+  if (!bootLoader) return;
+  bootLoader.classList.add('is-hidden');
+}
 
 /** Returns true when the viewport is mobile-width (<720px) */
 function isMobileLayout() { return window.innerWidth < 720; }
@@ -1438,25 +1450,31 @@ document.getElementById('mobile-filters-bar')?.addEventListener('scroll', () => 
    BOOT — Initialize everything in dependency order
    ============================================================ */
 (async () => {
-  // Set date/hour to current time (clamped to valid range)
-  const { ymd, hour } = getInitialDateAndHour();
-  dateInput.value  = ymd;
-  hourSlider.value = hour;
-  updateHour(hour);
+  showBootLoader('Cargando datos…');
 
-  checkDesktop();
-  resetSummary();
-  setSheetState('peek', false);
+  try {
+    const { ymd, hour } = getInitialDateAndHour();
+    dateInput.value  = ymd;
+    hourSlider.value = hour;
+    updateHour(hour);
 
-  // Run location center + catalog loads in parallel where possible
-  await centerMapByApproxLocation();
-  await loadRotulosCatalog();
-  await loadAddressCatalog();
-  await loadTerracesGeojson();
-  await initDuckDB();
-  await refreshTerraceShadowColors();
+    checkDesktop();
+    resetSummary();
+    setSheetState('peek', false);
 
-  renderTerracesLayer();
-  updateLegendPosition();
-  updateLegendVisibility();
+    await centerMapByApproxLocation();
+    await loadRotulosCatalog();
+    await loadAddressCatalog();
+    await loadTerracesGeojson();
+    await initDuckDB();
+    await refreshTerraceShadowColors();
+
+    renderTerracesLayer();
+    updateLegendPosition();
+    updateLegendVisibility();
+  } catch (err) {
+    console.error('Boot error:', err);
+  } finally {
+    hideBootLoader();
+  }
 })();
