@@ -1902,29 +1902,6 @@
       return String(v).trim() || '—';
     }
 
-    /* ════════════════════════════════════════
-       USER LOCATION — PERSISTENCE
-    ════════════════════════════════════════ */
-    function saveUserLocation(lat, lng) {
-	  const data = { lat, lng, timestamp: new Date().toISOString() };
-	  userLocationData = data;
-	  updateExportBtnVisibility();
-	}
-
-    function loadSavedUserLocation() {
-      try {
-        const raw = localStorage.getItem(USER_LOC_STORAGE_KEY);
-        if (!raw) return null;
-        const data = JSON.parse(raw);
-        if (typeof data.lat === 'number' && typeof data.lng === 'number') return data;
-      } catch (e) {}
-      return null;
-    }
-
-
-    function updateExportBtnVisibility() {
-      /**/
-    }
 
     /* ════════════════════════════════════════
        USER LOCATION MARKER (improved)
@@ -1978,7 +1955,6 @@
           fabLocate.classList.remove('locating');
           hideStatus();
 
-          saveUserLocation(lat, lng);
           showUserLocationMarker(lat, lng);
 
           const targetZoom = 17;
