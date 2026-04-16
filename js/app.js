@@ -121,7 +121,6 @@ const terraceInfoSection = document.getElementById('terrace-info-section');
 const terraceInfoCard    = document.getElementById('terrace-info-card');
 const shadowLegend   = document.getElementById('shadow-legend');
 const searchWrap     = document.getElementById('search-wrap');
-const bootLoader = document.getElementById('boot-loader');
 
 // Mobile filter elements
 const greenFilterToggle        = document.getElementById('green-filter-toggle');
@@ -149,18 +148,6 @@ const desktopTypeDropdown = document.getElementById('desktop-type-dropdown');
 /* ============================================================
    4. UTILITIES
    ============================================================ */
-function showBootLoader(text = 'Cargando datos…') {
-  if (!bootLoader) return;
-  const textEl = bootLoader.querySelector('.boot-loader-text');
-  if (textEl) textEl.textContent = text;
-  bootLoader.classList.remove('is-hidden');
-}
-
-function hideBootLoader() {
-  if (!bootLoader) return;
-  bootLoader.classList.add('is-hidden');
-}
-
 /** Returns true when the viewport is mobile-width (<720px) */
 function isMobileLayout() { return window.innerWidth < 720; }
 
@@ -1450,6 +1437,8 @@ document.getElementById('mobile-filters-bar')?.addEventListener('scroll', () => 
    BOOT — Initialize everything in dependency order
    ============================================================ */
 (async () => {
+  showStatus('Cargando datos…', false, true);
+
   try {
     const { ymd, hour } = getInitialDateAndHour();
     dateInput.value  = ymd;
