@@ -538,7 +538,13 @@ function updateLegendPosition() {
 /** Legend is only visible on mobile when sheet is at peek state and not dragging */
 function updateLegendVisibility() {
   if (!shadowLegend) return;
-  const shouldShow = isMobileLayout() && sheetState === 'peek' && !isDragging;
+
+  if (!isMobileLayout()) {
+    shadowLegend.classList.remove('hidden');
+    return;
+  }
+
+  const shouldShow = sheetState === 'peek' && !isDragging;
   shadowLegend.classList.toggle('hidden', !shouldShow);
 }
 
